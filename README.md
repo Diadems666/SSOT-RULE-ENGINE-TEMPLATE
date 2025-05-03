@@ -51,7 +51,7 @@ This template provides the following directory and file structure within your pr
 
 1. **Copy Template:** Copy the entire `.cursor` directory from this template into the root of your new or existing project. Copy the contents of `USER-RULES.md` to the User-Rules in Cursor AI settings panel (Settings > Cursor AI > User Rules).
 
-2. **Configure `mcp.json`:** Open `./.cursor/mcp.json` and review the configuration. **Crucially, update the `"backup-dir"` path for the `memory` server to a location appropriate for your operating system and preferences.**
+2. **Configure `mcp.json`:** Open `./.cursor/mcp.json` and review the configuration. 
 
 3. **Initial SSOT/Rule Engine Setup:**
    * **New Project (from Description):** In your Cursor chat, provide a detailed project description, then on a new line, type `!!-INIT-.ENGINE-!!`.
@@ -104,30 +104,12 @@ For the complete list and detailed documentation, see `./.cursor/CORE/COMS/.COMS
 
 ## ⚙️ Additional Configuration
 
-### Setting up .gitignore
-
-To properly set up your repository for GitHub, make sure to add the following to your `.gitignore` file:
-
-# Ignore BACKUP directory
-.cursor/BACKUP/
-
 # Node.js dependencies
 node_modules/
 
 # Build outputs
 dist/
 build/
-
-# Logs
-*.log
-logs/
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 ## 👥 Contributing
 
@@ -156,23 +138,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-You can also run the `!!-PREPARE-GITHUB-!!` command to automatically analyze your project and configure an appropriate `.gitignore` file.
-
-## GitHub About Section
-
-### Project Description
-Cursor AI SSOT & Rule Engine Template: A comprehensive framework for integrating Cursor AI's advanced features into any project. Includes Single Source of Truth (SSOT) tracking, custom project rules, and Model Context Protocol (MCP) with Knowledge Graph for intelligent context management.
-
-### Topics
-- cursor-ai
-- knowledge-graph
-- ai-assistant
-- mcp-server
-- ssot
-- rule-engine
-- development-tools
-- productivity
-- code-intelligence
-- project-management
-- documentation-automation
