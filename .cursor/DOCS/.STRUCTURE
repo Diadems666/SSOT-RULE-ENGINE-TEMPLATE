@@ -1,0 +1,27 @@
+.cursor/
+├── CORE/
+│   ├── COMS/               # AI Commands & Documentation
+│   │   ├── .COMS           # User-friendly command list
+│   │   └── .COMS-ENGINE    # AI documentation for commands (Logic defined in .ENGINE)
+│   ├── MCP/                # MCP Server Directories (initially empty, npm install needed)
+│   │   ├── filesystem/
+│   │   ├── knowledge-graph/
+│   │   └── sequentialthinking/
+│   ├── MEMORY/             # Persistent Memory Storage (JSONL Knowledge Graph backup)
+│   │   └── memory.jsonl    # Primary memory file
+│   ├── PROMPTS/            # Storage for initial prompt, etc.
+│   │   └── .PROMPT         # Created by !!-INIT-.ENGINE-!!
+│   ├── RULE-ENGINE/        # Staging area for AI-generated .mdc rules
+│   └── SSOT/               # Single Source of Truth files
+│       ├── .ENGINE         # CENTRAL Setup & Workflow Logic (includes MCP/KG steps)
+│       ├── .CONTINUE       # Next steps/focus
+│       ├── .CONTEXT        # High-level overview
+│       ├── .FACTS          # Technical decisions/constraints
+│       ├── .HISTORY        # Timestamped action log
+│       ├── .INIT           # Initial directives from setup
+│       ├── .MEMORY         # Structured project entities/details
+│       └── .PROGRESS       # Task completion status
+├── rules/                  # Standard Cursor Project Rules directory (Manual Integration Target)
+│   └── 999-mdc-format.mdc  # Guide for MDC format (Copy from ./CORE/RULE-ENGINE)
+└── mcp.json                # MCP Server Configuration (MOVED HERE)
+└── .cursorrules            # Legacy rules file (minimal pointer)

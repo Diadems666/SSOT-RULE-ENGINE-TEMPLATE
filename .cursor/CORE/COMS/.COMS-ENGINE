@@ -1,0 +1,77 @@
+# Cursor AI Agent Command Definitions (Documentation for AI)
+
+This file documents the available chat command triggers recognized by the Cursor AI agent and the corresponding workflows they are intended to execute, as defined in the main execution logic file: `./.cursor/CORE/SSOT/.ENGINE`.
+
+When a trigger listed here is detected in the chat, the AI's core behavior (as defined in User Rules) directs it to execute the specific logic block associated with that trigger within `./.cursor/CORE/SSOT/.ENGINE`.
+
+## Command Definitions:
+
+### `!!-INIT-.ENGINE-!!`
+
+* **Description:** Initializes the SSOT system and Rule Engine configuration for a *new* project.
+* **Input:** Requires a detailed project description provided in the chat immediately before the trigger.
+* **Execution Logic Location:** Handled by the `IF Trigger is !!-INIT-.ENGINE-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Reads prompt description, creates `./.cursor/CORE/SSOT/.PROMPT` with full input, populates SSOT files from description, creates core directory structure (including MCP subdirs), handles legacy rules, generates MDC rules to `./.cursor/CORE/RULE-ENGINE/`, updates workflow rule.
+
+### `!!-ADD-.ENGINE-!!`
+
+* **Description:** Integrates the SSOT system and Rule Engine configuration into an *existing* project.
+* **Input:** Requires analysis of the existing project codebase.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-ADD-.ENGINE-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Performs comprehensive codebase analysis, populates SSOT files from analysis, creates core directory structure (including MCP subdirs if missing), handles legacy rules, generates MDC rules to `./.cursor/CORE/RULE-ENGINE/`, updates workflow rule. Does NOT create a `.PROMPT` file.
+
+### `!!-INSTALL-MCP-!!`
+
+* **Description:** Installs the standard MCP servers (Knowledge Graph, Sequential Thinking, Filesystem).
+* **Input:** The trigger command itself. Requires base setup directories to exist and `./.cursor/mcp.json` to be present and configured.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-INSTALL-MCP-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Checks prerequisites, navigates to MCP server subdirectories and executes `npm install` in each, updates SSOT .HISTORY. Does NOT generate `mcp.json`.
+
+### `!!-BUILD-KG-!!`
+
+* **Description:** Builds the initial Knowledge Graph representation of the project codebase using the installed and configured MCP Knowledge Graph server.
+* **Input:** The trigger command itself. Requires MCP servers to be installed and running/configured correctly (based on `!!-INSTALL-MCP-!!` and `mcp.json`).
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-BUILD-KG-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Checks MCP prerequisites, performs codebase analysis specifically for KG building (entities, relations, observations), uses MCP Knowledge Graph API calls (`create_entities`, `create_relations`, `add_observations`, etc.) to populate the graph, updates SSOT .HISTORY.
+
+### `!!-LOAD-PORTABLE-!!`
+
+* **Description:** Loads a saved project state snapshot from `./.cursor/CORE/SSOT/.PORTABLE`.
+* **Input:** The trigger command itself. Requires `./.cursor/CORE/SSOT/.PORTABLE` to exist.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-LOAD-PORTABLE-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Reads/parses .PORTABLE, populates/overwrites SSOT files based on its content, optionally populates Knowledge Graph if MCP is running, updates SSOT .HISTORY.
+
+### `!!-UPDATE-SSOT-!!`
+
+* **Description:** Synthesizes updates for the core SSOT files based on recent project changes or completed tasks.
+* **Input:** The trigger command itself, implying the AI should reflect on recent activity.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-UPDATE-SSOT-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Analyzes recent activity, updates SSOT files (.HISTORY, .FACTS, .MEMORY, .CONTEXT, .CONTINUE, .PROGRESS), optionally updates Knowledge Graph via API based on changes.
+
+### `!!-CREATE-PORTABLE-!!`
+
+* **Description:** Creates/updates `./.cursor/CORE/SSOT/.PORTABLE` with a snapshot of the current project state.
+* **Input:** The trigger command itself. Knowledge sources are SSOT files, rules, codebase analysis, MCP state.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-CREATE-PORTABLE-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Synthesizes project state from various sources, formats the snapshot content, writes to `./.cursor/CORE/SSOT/.PORTABLE`, updates SSOT .HISTORY.
+
+### `!!-CREATE-CHAT-HISTORY-!!`
+
+* **Description:** Copies the current chat history into `./.cursor/CORE/SSOT/.CHAT`.
+* **Input:** The trigger command itself.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-CREATE-CHAT-HISTORY-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Obtains current chat history, writes it to `./.cursor/CORE/SSOT/.CHAT`, updates SSOT .HISTORY.
+
+### `!!-UPDATE-DOCS-!!`
+
+* **Description:** Updates project documentation (e.g., README.md, code comments) based on the current project state.
+* **Input:** The trigger command itself. Knowledge sources are project state (SSOT, rules, analysis, KG).
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-UPDATE-DOCS-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Analyzes project state for documentation relevance, updates README.md, updates code comments, optionally creates other documentation, updates SSOT .HISTORY.
+
+### `!!-PREPARE-GITHUB-!!`
+
+* **Description:** Prepares the project workspace for GitHub upload (updates .gitignore, checks for sensitive data/build artifacts, verifies docs).
+* **Input:** The trigger command itself. Knowledge sources are codebase/working directory, SSOT .FACTS.
+* **Execution Logic Location:** Handled by the `ELSE IF Trigger is !!-PREPARE-GITHUB-!!` block within `./.cursor/CORE/SSOT/.ENGINE`.
+* **Key Actions:** Analyzes project for exclusion needs, updates .gitignore, checks docs, reports potential issues, updates SSOT .HISTORY.

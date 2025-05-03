@@ -22,7 +22,7 @@ Upon receiving *either* trigger phrase, execute the instructions below. The spec
         * **Action:**
             * Navigate to the `./.cursor/CORE/SSOT` directory.
             * Create a file named `.PROMPT`. **Copy the *entire* chat input you received for this request (as defined above) verbatim into this `.PROMPT` file.** This file serves as the immutable record of the project's genesis prompt.
-            * Leveraging your understanding of the project description AND my "Project Setup & Initialization Trigger Handling" User Rule, automatically create and populate the core SSOT files (`.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`) based *only* on the project description found before the trigger.
+            * Leveraging your understanding of the project description AND my "Project Setup & Initialization Trigger Handling" User Rule, automatically create and populate the core SSOT files (`.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`) based *only* on the project description found before the trigger.
             * Acknowledge that the `.PROMPT` file contains the full original source for this workflow, and other SSOT files contain the derived state from the description.
 
     * **ELSE IF Trigger is `!! - ADD SSOT & RULE ENGINE - !!`:**
@@ -30,10 +30,20 @@ Upon receiving *either* trigger phrase, execute the instructions below. The spec
         * **Action:**
             * Perform a comprehensive, recursive examination of the entire project codebase and file structure. Synthesize a thorough understanding of the project's purpose, technologies, architecture, components, dependencies, patterns, conventions, and existing documentation (as detailed in the "Project Setup & Initialization Trigger Handling" User Rule). This analysis is the source material.
             * Navigate to the `./.cursor/CORE/SSOT` directory.
-            * Leveraging the comprehensive project analysis performed AND my "Project Setup & Initialization Trigger Handling" User Rule, automatically create and populate the core SSOT files (`.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`) based on the analysis findings. **Do NOT create a `.PROMPT` file for this workflow, as the codebase is the source, not a preceding chat prompt description.**
+            * Leveraging the comprehensive project analysis performed AND my "Project Setup & Initialization Trigger Handling" User Rule, automatically create and populate the core SSOT files (`.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`) based on the analysis findings. **Do NOT create a `.PROMPT` file for this workflow, as the codebase is the source, not a preceding chat prompt description.**
             * Acknowledge that the codebase analysis was the source for this workflow, and the SSOT files contain the derived state. Note that for this workflow, the instructions are in `.ENGINE` itself.
 
-3.  **Create Core Directory Structure (If Missing):** Ensure the necessary directory structure exists within the project's `.cursor` directory (./.cursor/CORE/SSOT, /MCP, /RULE_ENGINE, /PROMPTS, /MEMORY). Ensure parent directories are created. Note that `./.cursor/CORE/SSOT/.ENGINE` should already exist for this step to be executed as you are reading it.
+3.  **Create Core Directory Structure (If Missing):** Ensure the necessary directory structure exists within the project's `.cursor` directory. Create the following directories if they do not exist, ensuring parent directories are created as needed:
+    * `./.cursor/CORE/SSOT`
+    * `./.cursor/CORE/MCP`
+    * `./.cursor/CORE/MCP/knowledge-graph`
+    * `./.cursor/CORE/MCP/sequentialthinking`
+    * `./.cursor/CORE/MCP/filesystem`
+    * `./.cursor/CORE/RULE_ENGINE`
+    * `./.cursor/CORE/PROMPTS`
+    * `./.cursor/CORE/MEMORY`
+    * `./.cursor/rules`
+    * Note that `./.cursor/CORE/SSOT/.ENGINE` should already exist for this step to be executed as you are reading it.
 
 4.  **Create Legacy `.cursorrules` File (If Missing/Update):** In the project root (`./`), create `.cursorrules` if missing. Add a minimal comment pointing to `./.cursor/rules/`. If it exists, ensure the comment is present and note that modern rules are in `.mdc`.
 
@@ -43,24 +53,24 @@ Upon receiving *either* trigger phrase, execute the instructions below. The spec
     * Use correct frontmatter (`description`, `globs`, `alwaysApply`).
     * Generate or update the following rules, tailoring their content based on the specific workflow's input source:
         * `999-mdc-format.mdc`: Guide for MDC format.
-        * `00-core-system-overview.mdc`: Explain the `./.cursor/CORE` structure, mentioning `.ENGINE` as the central setup instruction file and `.PROMPT` (if created during INIT) as the original prompt record.
-        * `01-ssot-interaction-guide.mdc`: Guide for interacting with SSOT files, explaining each (.ENGINE, and .PROMPT if applicable, plus others), tailored to how they were populated.
+        * `00-core-system-overview.mdc`: Explain the `./.cursor/CORE` structure, mentioning `.ENGINE` as the central setup instruction file, the role of `./.cursor/CORE/MCP/` and `.MCP-ENGINE` for MCP setup, and `.PROMPT` (if created during INIT) as the original prompt record.
+        * `01-ssot-interaction-guide.mdc`: Guide for interacting with SSOT files, explaining each (.ENGINE, .MCP-ENGINE, .PROMPT if applicable, .HISTORY, .CONTINUE, .CONTEXT, .FACTS, .MEMORY, .PROGRESS), tailored to how they were populated.
         * `02-development-workflow.mdc`: Outline the development process, emphasizing SSOT/rule use, tailored to whether the project was new (following a plan from prompt) or existing (understanding current state from analysis).
         * Project-Specific Rules: Create 2-4 rules capturing key aspects derived from the input source (description or analysis), e.g., standards, patterns, architecture details. Name descriptively, set appropriate globs.
     * Organize `.mdc` files using prefixes and subdirectories (e.g., `tasks/`).
 
 6.  **Update Rule Index/Workflow (Self-Reference):** Create or update `010-workflow.mdc` in `./.cursor/rules/` to list the generated/updated `.mdc` rules. Review and potentially update `999-mdc-format.mdc` based on the rule generation process from the specific input source.
 
-7.  **Final Confirmation:** State that the SSOT and Rule Engine setup is complete based on the workflow executed (INIT from prompt or ADD from analysis). List created/updated items (directories, .cursorrules, .mdc files). Confirm that the instructions for *either* setup method are recorded in `./.cursor/CORE/SSOT/.ENGINE`, and specifically for the INIT workflow, the original prompt is saved in `./.cursor/CORE/SSOT/.PROMPT`.
+7.  **Final Confirmation:** State that the initial SSOT/Rule Engine setup is complete based on the workflow executed (INIT from prompt or ADD from analysis). List created/updated items (directories, .cursorrules, .mdc files). Confirm that the instructions for *this stage* of setup are recorded in `./.cursor/CORE/SSOT/.ENGINE`, the instructions for the subsequent MCP setup are in `./.cursor/CORE/MCP/.MCP-ENGINE`, and specifically for the INIT workflow, the original prompt is saved in `./.cursor/CORE/SSOT/.PROMPT`. Inform the user they can now proceed with the MCP installation using `!! - INSTALL MCP - !!`.
 
 **Constraints & Key Behaviors:**
 
-* This file (`.ENGINE`) is the primary instruction source for the two setup triggers.
-* Strictly adhere to the directory structure in step 3.
-* Input source for SSOT/MDC population depends on the trigger: preceding chat description for `!! - INIT SSOT & RULE ENGINE - !!`, codebase analysis for `!! - ADD SSOT & RULE ENGINE - !!`.
-* Create and populate `.PROMPT` ONLY for the `!! - INIT SSOT & RULE ENGINE - !!` workflow, copying the *full* chat input.
-* Perform comprehensive codebase analysis ONLY for the `!! - ADD SSOT & RULE ENGINE - !!` workflow, as detailed in User Rules and this file.
+* This file (`.ENGINE`) is the primary instruction source for the two *initial* setup triggers (`!! - INIT...` and `!! - ADD...`).
+* Strictly adhere to the directory structure creation in step 3.
+* Input source for SSOT/MDC population depends on the trigger: preceding chat description for `!! - INIT...`, codebase analysis for `!! - ADD...`.
+* Create and populate `.PROMPT` ONLY for the `!! - INIT...` workflow, copying the *full* chat input.
+* Perform comprehensive codebase analysis ONLY for the `!! - ADD...` workflow, as detailed in User Rules and this file.
 * Create `.mdc` files in `./.cursor/rules/` following the specified format and guidelines.
 * Ensure the legacy `.cursorrules` file is handled.
-* Do not proceed with development until setup is complete and confirmed.
-* All future interactions must leverage SSOT files (.ENGINE, .PROMPT if applicable, and others) and .mdc rules, in conjunction with User Rules.
+* Do not proceed with the MCP installation or development tasks until the steps within *this* file's execution are complete and confirmed.
+* All future interactions must leverage SSOT files (.ENGINE, .MCP-ENGINE, .PROMPT if applicable, and others) and .mdc rules, in conjunction with User Rules.

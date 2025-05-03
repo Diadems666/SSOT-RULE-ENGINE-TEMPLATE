@@ -5,15 +5,8 @@
       "args": [
         "./.cursor/CORE/MCP/knowledge-graph/dist/index.js",
         "--memory-path",
-        "./.cursor/CORE/MEMORY/memory.jsonl",
-        "--log-level",
-        "info",
-        "--auto-backup",
-        "true",
-        "--backup-interval",
-        "3600"
-        //"--backup-dir"
-        //"C:/MCP-SERVERS/memory-backups" // Note: You may need to adjust this OS-specific path
+        "./.cursor/CORE/MEMORY/memory.jsonl"
+        
       ],
       "env": {
         "NODE_ENV": "production",
@@ -28,13 +21,13 @@
     "sequential-thinking": {
       "command": "node",
       "args": [
-        "./.cursor/CORE/MCP/sequential-thinking/node_modules/@modelcontextprotocol/server-sequential-thinking/dist/index.js"
+        "./.cursor/CORE/MCP/sequentialthinking/dist/index.js"
       ]
     },
     "filesystem": {
       "command": "node",
       "args": [
-        "./.cursor/CORE/MCP/filesystem/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js",
+        "./.cursor/CORE/MCP/filesystem/dist/index.js",
         "./" 
       ],
       "env": {

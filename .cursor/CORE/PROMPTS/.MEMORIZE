@@ -1,0 +1,233 @@
+!! - MEMORIZE - !!
+
+Objective: Your primary task is to construct a detailed knowledge graph representation of this current project codebase using the provided MCP knowledge graph server and its API tools. This knowledge graph will serve as your enhanced, persistent memory and context about the project's structure, components, and relationships, significantly improving your ability to understand and work with the code.
+
+ 
+
+Knowledge Graph Concepts & Available Tools:
+
+ 
+
+You have been provided with documentation detailing the core concepts (Entities, Relations, Observations) and the API tools available through the MCP server. You MUST adhere to these concepts and use ONLY the documented API tools to interact with the knowledge graph.
+
+ 
+
+Entities: Represent project components (files, functions, modules, etc.). Each needs a unique name (identifier), an entityType, and a list of observations.
+
+Relations: Directed connections between entities, described in active voice (from -> to, relationType).
+
+Observations: String facts about an entity.
+
+API Tools:
+
+create_entities(entities)
+
+create_relations(relations)
+
+add_observations(observations)
+
+delete_entities(entityNames)
+
+delete_observations(deletions)
+
+delete_relations(relations)
+
+read_graph()
+
+search_nodes(query)
+
+open_nodes(names)
+
+Knowledge Graph Schema for Project Representation:
+
+ 
+
+You will use the following schema definitions to represent the project. You may identify additional types or relations as needed, but start with these core ones.
+
+ 
+
+Entity Types:
+
+ 
+
+project: The root entity representing the entire project. (Example: project:my-project-name)
+
+directory: Represents a directory within the project. (Example: directory:src/utils)
+
+file: Represents a specific file. (Example: file:src/index.ts)
+
+module: Represents an installed dependency or internal module/package. (Example: module:@modelcontextprotocol/server-memory, module:./myModule)
+
+class: Represents a class definition in the code. (Example: class:UserManager)
+
+function: Represents a function definition. (Example: function:processUserData)
+
+interface: Represents an interface definition (in languages that support them). (Example: interface:DatabaseAdapter)
+
+config_item: Represents a specific configuration variable or setting. (Example: config:DATABASE_URL)
+
+service: Represents an external service or resource the project interacts with (database, external API, the MCP server itself, etc.). (Example: service:MCP_KnowledgeGraph, service:PostgresDB)
+
+Relation Types (Use Active Voice):
+
+ 
+
+contains: A directory contains a file or subdirectory; a file contains a class, function, or interface. (Example: directory:src contains file:src/index.ts)
+
+depends_on: A file, module, class, or function depends_on another module, file, class, or service. (Example: file:src/index.ts depends_on module:express)
+
+calls: A function or class method calls another function. (Example: function:handleRequest calls function:processUserData)
+
+uses: A function or class uses a configuration item. (Example: function:connectDB uses config:DATABASE_URL)
+
+implements: A class implements an interface. (Example: class:PostgresAdapter implements interface:DatabaseAdapter)
+
+extends: A class extends another class. (Example: class:AdminUser extends class:User)
+
+integrates_with: The project or a specific module integrates_with an external service. (Example: project:my-project-name integrates_with service:MCP_KnowledgeGraph)
+
+has_test_file: A source file has_test_file associated with it. (Example: file:src/userService.ts has_test_file file:tests/userService.test.ts)
+
+defined_in: A class, function, interface, or config item defined_in a specific file. (Example: class:User defined_in file:src/models/user.ts) - Note: This can be used in addition to or instead of contains relation from file to code components, choose the representation you find most useful but be consistent.
+
+Observations: Attach relevant facts as string observations to entities.
+
+ 
+
+project: path: /path/to/project, language: TypeScript, entry_point: src/index.ts, description: ...
+
+directory: path: src/utils, purpose: Utility functions
+
+file: path: src/index.ts, language: TypeScript, lines_of_code: ~250, purpose: Application entry point
+
+module: version: 1.0.1, description: ..., source: npm (or source: internal)
+
+class: description: ..., methods: methodA, methodB, properties: prop1, prop2, visibility: public
+
+function: description: ..., parameters: param1 (type), param2 (type), return_type: type, visibility: public/private, side_effects: yes/no
+
+interface: description: ..., methods: methodA, methodB, properties: prop1, prop2
+
+config_item: description: ..., source: .env, example_value: example (avoid sensitive data)
+
+service: type: Database, protocol: HTTP, description: ..., endpoint_format: ...
+
+Execution Strategy:
+
+ 
+
+Follow these steps to build the knowledge graph:
+
+ 
+
+Acknowledge Task: Start by stating clearly that you understand the task and are beginning to build the project knowledge graph using the MCP server.
+
+Initial Scan & Entity Creation (Structure):
+
+Scan the project directory structure.
+
+Create the main project entity.
+
+Recursively identify directories and files.
+
+Create directory and file entities for all significant parts of the project (avoiding build artifacts, .git, node_modules unless specifically needed).
+
+Use create_entities for batch creation.
+
+Initial Relation Creation (Structure):
+
+Establish the contains relations: Project contains top-level directories, directories contains subdirectories and files.
+
+Use create_relations for batch creation.
+
+Code Analysis & Entity Creation (Components):
+
+Iterate through relevant code files (e.g., .ts, .js, .py, etc.).
+
+Identify class, function, interface definitions.
+
+Identify significant config_item usages (e.g., environment variables, config file values).
+
+Identify external service interactions.
+
+Create corresponding entities using create_entities.
+
+Relation Creation (Code Connections):
+
+Analyze the code for relationships between components:
+
+defined_in relations: Connect classes, functions, interfaces, config items to the files they are defined in.
+
+depends_on relations: Identify imports/requires, class dependencies (composition), function dependencies.
+
+calls relations: Analyze function/method calls.
+
+uses relations: Track where configuration items are used.
+
+implements, extends relations: Identify class inheritance and interface implementation.
+
+integrates_with relations: Note where external services are connected or used.
+
+has_test_file relations: Connect source files to their test files.
+
+Use create_relations for batch creation. Ensure source and target entities exist before creating relations.
+
+Observation Extraction & Addition:
+
+Revisit all created entities.
+
+Extract relevant observations from file paths, names, code comments (docstrings), function signatures, class properties, package.json, configuration files, etc.
+
+Add observations to the respective entities using add_observations. Batch observations per entity where possible. Handle the case where add_observations might fail if an entity was missed in previous steps (this indicates an issue in the creation process that needs fixing).
+
+Represent the MCP Server Integration:
+
+Explicitly create a service:MCP_KnowledgeGraph entity if it doesn't exist.
+
+Create a integrates_with relation from the project entity (or the specific project module/file that interacts with the server) to the service:MCP_KnowledgeGraph entity.
+
+Add relevant observations to the service:MCP_KnowledgeGraph entity (e.g., protocol: MCP, purpose: Persistent memory).
+
+Review and Refine:
+
+(Optional but Recommended) Use read_graph or search_nodes/open_nodes to inspect parts of the graph.
+
+Identify areas where more detail is needed or where the representation could be improved.
+
+Make additional API calls (create_entities, create_relations, add_observations) to fill gaps or correct information.
+
+Do not use delete operations unless specifically instructed to correct a significant error.
+
+Confirmation: Once you believe you have built a reasonably comprehensive initial graph covering the key aspects, state that you have completed the initial graph construction.
+
+Using the API - Important Considerations:
+
+ 
+
+Order of Operations: Always attempt to create entities first, then relations, then add observations. The API is designed this way (e.g., add_observations requires the entity to exist).
+
+Batching: Utilize the fact that create_entities, create_relations, and add_observations accept arrays. Batch your calls for efficiency.
+
+Error Handling: Be mindful that add_observations and create_relations can fail if entities don't exist. If this happens, identify the missing entity and create it before retrying the operation.
+
+Identifier Naming: Use clear and unique names for entities, incorporating their type (e.g., file:src/utils/helpers.ts, function:validateInput). Be consistent.
+
+Granularity: Start with a moderate level of detail (key files, classes, functions, dependencies). Avoid creating entities for every variable or simple expression initially. You can add more detail later if needed.
+
+Goal: The goal is to create a navigable map of the codebase that helps you understand:
+
+ 
+
+Project structure at a glance.
+
+Where specific code components are located.
+
+How different parts of the code are connected.
+
+Key dependencies and integrations.
+
+The purpose and details of important entities via observations.
+
+Begin the process now. State when you are starting and confirm when the initial graph construction is complete. You are free to perform the necessary analysis of the codebase using your internal capabilities before making API calls. Good luck!
+
+ 

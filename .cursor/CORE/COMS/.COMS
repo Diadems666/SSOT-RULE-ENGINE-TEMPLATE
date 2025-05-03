@@ -1,0 +1,90 @@
+# Cursor AI Agent Commands (Copy & Paste)
+#
+# Use these commands in the Cursor AI chat to trigger specific workflows.
+# Detailed instructions for these commands are in ./ .cursor/CORE/COMS/.COMS-ENGINE
+# and the primary execution logic is in ./ .cursor/CORE/SSOT/.ENGINE.
+#
+
+## --- System Setup Commands ---
+
+!!-INIT-.ENGINE-!!
+# Usage: Initialize system in a NEW project. Provide detailed project description BEFORE this command in chat.
+#
+# Example:
+# This project is a simple Node.js web server using Express. It will have endpoints for users and products.
+# It should connect to a PostgreSQL database. Use TypeScript.
+# !!-INIT-.ENGINE-!!
+#
+
+!!-ADD-.ENGINE-!!
+# Usage: Integrate system into an EXISTING project. Use by itself in chat. AI will analyze codebase.
+#
+# Example:
+# !!-ADD-.ENGINE-!!
+#
+
+!!-INSTALL-MCP-!!
+# Usage: Install MCP servers (Knowledge Graph, etc.). Run AFTER !!-INIT-.ENGINE-!! or !!-ADD-.ENGINE-!!
+# Make sure ./ .cursor/mcp.json exists and is configured (especially backup paths) BEFORE running this.
+# Requires internet access for npm install.
+#
+# Example:
+# !!-INSTALL-MCP-!!
+#
+
+!!-BUILD-KG-!!
+# Usage: Build the initial Knowledge Graph from the project codebase analysis. Run AFTER !!-INSTALL-MCP-!!
+# and ensuring MCP servers are running/Cursor is restarted.
+#
+# Example:
+# !!-BUILD-KG-!!
+#
+
+## --- State & Context Commands ---
+
+!!-LOAD-PORTABLE-!!
+# Usage: Load project state, SSOT files, and potentially populate KG from ./ .cursor/CORE/SSOT/.PORTABLE
+# Make sure the .PORTABLE file exists and the format is correct BEFORE running.
+#
+# Example:
+# !!-LOAD-PORTABLE-!!
+#
+
+!!-UPDATE-SSOT-!!
+# Usage: Synthesize and update SSOT files (.HISTORY, .FACTS, .MEMORY, etc.) based on recent changes/activity.
+# Use after completing a task or set of changes.
+#
+# Example:
+# !!-UPDATE-SSOT-!!
+#
+
+!!-CREATE-PORTABLE-!!
+# Usage: Create/update ./ .cursor/CORE/SSOT/.PORTABLE with a snapshot of current project state (SSOT, rules, analysis, KG).
+# Use to save state or prepare for transfer.
+#
+# Example:
+# !!-CREATE-PORTABLE-!!
+#
+
+!!-CREATE-CHAT-HISTORY-!!
+# Usage: Copy the current chat history into ./ .cursor/CORE/SSOT/.CHAT.
+#
+# Example:
+# !!-CREATE-CHAT-HISTORY-!!
+#
+
+## --- Maintenance & Documentation Commands ---
+
+!!-UPDATE-DOCS-!!
+# Usage: Analyze project state and update documentation, including README.md and code comments.
+#
+# Example:
+# !!-UPDATE-DOCS-!!
+#
+
+!!-PREPARE-GITHUB-!!
+# Usage: Analyze project for GitHub readiness - update .gitignore, check for sensitive data, check docs.
+#
+# Example:
+# !!-PREPARE-GITHUB-!!
+#
