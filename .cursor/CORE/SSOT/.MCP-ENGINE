@@ -1,0 +1,123 @@
+Okay, I understand. You want to integrate a new workflow for installing and configuring specific Model Context Protocol (MCP) servers into your existing Cursor AI agent setup framework.
+
+This involves:
+
+Creating a new instruction file: .cursor/CORE/MCP/.MCP-ENGINE.
+Defining the steps within .MCP-ENGINE to handle the npm install for three servers (knowledge-graph, sequentialthinking, filesystem) and configure mcp.json.
+Creating a new trigger phrase: !! - INSTALL MCP - !!.
+Updating the USER-RULES to recognize this trigger and delegate execution to .MCP-ENGINE.
+Slightly updating the original .ENGINE to ensure the necessary MCP directory structure is created during the initial setup.
+Let's break down the required changes:
+
+1. New File: ./.cursor/CORE/MCP/.MCP-ENGINE
+
+## Central Instructions for MCP Server Installation & Configuration
+
+**Objective:** This file (`./.cursor/CORE/MCP/.MCP-ENGINE`) contains the consolidated instruction set for installing and configuring the standard project MCP servers. It is triggered by a specific phrase in the Cursor chat.
+
+**Trigger Mechanism:**
+* `!! - INSTALL MCP - !!`: Used by itself in a chat for a project where the base SSOT/Rule Engine setup is already complete. This initiates the MCP server installation and configuration process.
+
+**Installation & Configuration Process:**
+
+Upon receiving the `!! - INSTALL MCP - !!` trigger phrase, execute the instructions below:
+
+1.  **Acknowledge Trigger:**
+    * Confirm receipt of the trigger phrase (`!! - INSTALL MCP - !!`).
+    * State that the MCP server installation and configuration process is being initiated.
+
+2.  **Prerequisite Check:**
+    * Verify that the `./.cursor/CORE/MCP` directory exists. If not, state that the initial SSOT/Rule Engine setup might be incomplete and halt the process, advising the user to run one of the initial setup triggers first.
+
+3.  **Install MCP Servers:**
+    * **Knowledge Graph Server:**
+        * Navigate to the `./.cursor/CORE/MCP/knowledge-graph` directory.
+        * Execute the command: `npm install`
+        * *Note:* Inform the user that this step might require administrator privileges depending on the system configuration and npm setup.
+    * **Sequential Thinking Server:**
+        * Navigate to the `./.cursor/CORE/MCP/sequentialthinking` directory.
+        * Execute the command: `npm install`
+        * *Note:* Inform the user that this step might require administrator privileges.
+    * **Filesystem Server:**
+        * Navigate to the `./.cursor/CORE/MCP/filesystem` directory.
+        * Execute the command: `npm install`
+        * *Note:* Inform the user that this step might require administrator privileges.
+
+4.  **Configure `mcp.json`:**
+    * Navigate to the project root directory (`./`).
+    * Check if a file named `mcp.json` exists in the root directory.
+    * Create or overwrite the `mcp.json` file with the following content:
+        ```json
+        {
+            "mcpServers": {
+              "memory": {
+                "command": "node",
+                "args": [
+                  "./.cursor/CORE/MCP/knowledge-graph/dist/index.js", // Assuming npm install creates this structure
+                  "--memory-path",
+                  "./.cursor/CORE/MEMORY/memory.jsonl",
+                  "--log-level",
+                  "info",
+                  "--auto-backup",
+                  "true",
+                  "--backup-interval",
+                  "3600",
+                  "--backup-dir",
+                  "C:/MCP-SERVERS/memory-backups" // Note: User may need to adjust this OS-specific path
+                ],
+                "env": {
+                  "NODE_ENV": "production",
+                  "MCP_SERVER_PORT": "3100",
+                  "MCP_MAX_ENTITIES": "1000",
+                  "MCP_ENABLE_COMPRESSION": "true"
+                },
+                "autoRestart": true,
+                "maxRestartAttempts": 5,
+                "restartDelay": 3000
+              },
+              "sequential-thinking": {
+                "command": "node",
+                "args": [
+                  "./.cursor/CORE/MCP/sequential-thinking/node_modules/@modelcontextprotocol/server-sequential-thinking/dist/index.js"
+                ]
+              },
+              "filesystem": {
+                "command": "node",
+                "args": [
+                  "./.cursor/CORE/MCP/filesystem/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js",
+                  "./"
+                ],
+                "env": {
+                  "DEBUG": "*"
+                }
+              }
+            },
+            "clientOptions": {
+              "connectionTimeout": 10000,
+              "reconnectOnDisconnect": true,
+              "maxReconnectAttempts": 5,
+              "reconnectInterval": 2000,
+              "enableCaching": true,
+              "cacheTTL": 300
+            }
+          }
+        ```
+    * State that `mcp.json` has been created/updated in the project root. Acknowledge the potential need for the user to adjust the `backup-dir` path in the `memory` server configuration if not using Windows or if a different backup location is desired.
+
+5.  **Update SSOT History:**
+    * Navigate to the `./.cursor/CORE/SSOT` directory.
+    * Append an entry to the `.HISTORY` file recording the successful installation and configuration of the MCP servers (e.g., `YYYY-MM-DD HH:MM:SS - Executed MCP server installation (knowledge-graph, sequentialthinking, filesystem) and configured mcp.json via !! - INSTALL MCP - !! trigger.`).
+
+6.  **Final Confirmation:**
+    * State that the MCP server setup is complete.
+    * List the actions performed: `npm install` executed in the three MCP server directories, and `mcp.json` created/updated in the project root.
+    * Confirm that the instructions for this process are recorded in `./.cursor/CORE/MCP/.MCP-ENGINE`.
+
+**Constraints & Key Behaviors:**
+
+* This file (`.MCP-ENGINE`) is the primary instruction source for the MCP setup trigger.
+* Strictly adhere to the directory navigation and command execution steps.
+* Use the exact JSON configuration provided for `mcp.json`, noting the user-adjustable backup path.
+* Ensure the SSOT `.HISTORY` file is updated upon completion.
+* Do not proceed if the prerequisite check fails.
+* Inform the user about potential administrator privilege requirements for `npm install`.
