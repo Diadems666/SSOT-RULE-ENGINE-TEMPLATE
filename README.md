@@ -17,7 +17,7 @@ This template provides a structured foundation for leveraging Cursor AI's advanc
 ## 📂 Template Structure
 
 This template provides the following directory and file structure within your project's root:
-
+```
 .cursor/
 ├── CORE/
 │ ├── COMS/ # AI Commands & Documentation
@@ -46,7 +46,7 @@ This template provides the following directory and file structure within your pr
 └── USER-RULES.md # Rules to copy to Cursor AI settings
 └── mcp.json # MCP Server Configuration
 └── .cursorrules # Legacy rules file (minimal pointer)
-
+```
 ## 🛠️ Getting Started
 
 1. **Copy Template:** Copy the entire `.cursor` directory from this template into the root of your new or existing project. Copy the contents of `USER-RULES.md` to the User-Rules in Cursor AI settings panel (Settings > Cursor AI > User Rules).
