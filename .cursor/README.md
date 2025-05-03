@@ -1,0 +1,1 @@
+Template system for the SSOT and rule engine and MCP server setup

@@ -1,0 +1,82 @@
+## Instructions for Adding SSOT & Rule Engine to Existing Project via Code Analysis
+
+**Objective:** This file (`./.cursor/CORE/SSOT/.ENGINE`) contains the instructions for initiating the SSOT and Rule Engine setup in an *existing* project. Upon detecting the specific trigger phrase, you are to perform a comprehensive analysis of the current project codebase and use that analysis to populate the SSOT files and generate relevant project-specific rules.
+
+**Trigger Mechanism:** The process is initiated when you encounter the exact phrase: `!! - ADD SSOT & RULE ENGINE - !!`.
+
+**Initialization Process (Triggered by `!! - ADD SSOT & RULE ENGINE - !!`):**
+
+Upon receiving the trigger phrase, perform the following steps sequentially and confirm completion of each major stage:
+
+1.  **Acknowledge Trigger & Initiate Analysis:** Confirm that you have received the `!! - ADD SSOT & RULE ENGINE - !!` trigger and state that you are initiating the setup process for an existing project. Declare that you will now perform a comprehensive analysis of the current codebase.
+
+2.  **Perform Comprehensive Project Analysis:** Recursively examine the entire project codebase and file structure. Synthesize a thorough understanding of:
+    * Project purpose and functionality (deduced from code, comments, READMEs, etc.).
+    * Key technologies, frameworks, and libraries used.
+    * Overall architecture and significant components.
+    * Important files, directories, and their roles.
+    * Dependency structure.
+    * Existing patterns, conventions, or technical decisions (even if not explicitly documented).
+    * Any existing documentation or configuration files (e.g., package.json, config files, READMEs).
+    This analysis is the source material for the subsequent steps.
+
+3.  **Create Core Directory Structure (If Missing):** Ensure the necessary directory structure exists within the project's `.cursor` directory:
+    ```
+    ./.cursor/CORE/SSOT
+    ./.cursor/CORE/MCP
+    ./.cursor/CORE/RULE_ENGINE
+    ./.cursor/CORE/PROMPTS
+    ./.cursor/CORE/MEMORY
+    ```
+    Ensure all parent directories (`.cursor`, `.cursor/CORE`, etc.) are created if they don't exist. Note that `./.cursor/CORE/SSOT/.ENGINE` itself should already exist as the file you are currently reading.
+
+4.  **Populate SSOT Files Based on Analysis:**
+    * Navigate to the `./.cursor/CORE/SSOT` directory.
+    * Leveraging the comprehensive project analysis performed in step 2 AND my existing "Project Setup & Initialization" and "SSOT State System & Consistency" User Rules, automatically create and populate the core SSOT files based on the analysis findings:
+        * `.INIT`: Summarize the project's apparent core directives, entry points, and inferred setup steps.
+        * `.HISTORY`: Create an initial entry indicating the project SSOT/Rule Engine setup timestamp via analysis.
+        * `.CONTINUE`: Define initial inferred next steps or areas requiring attention based on the analysis (e.g., areas lacking documentation, complex modules).
+        * `.CONTEXT`: Provide a high-level overview of the project's purpose, architecture, and scope derived from the analysis.
+        * `.FACTS`: Record key technologies, inferred technical decisions, patterns, or constraints identified during analysis.
+        * `.MEMORY`: Populate with details about significant project entities, components, and their relationships discovered during analysis.
+    * Ensure these files are populated concisely and accurately based on the codebase analysis, following the principles outlined in my "SSOT State System & Consistency" User Rule. Acknowledge that the `.ENGINE` file contains the instructions for this setup process, and the other SSOT files contain the *derived state* of the project.
+
+5.  **Create Legacy `.cursorrules` File (If Missing):**
+    * In the project root directory (`./`), create a file named `.cursorrules` if it doesn't already exist.
+    * Add a minimal comment indicating this is a legacy file managed by the SSOT/Rule Engine system. Do NOT add extensive rules here; all new rules will be in `.mdc` format. If the file exists but contains old rules, consider adding the comment and noting that modern rules are in `.mdc`.
+    * Example content: `# This is a legacy Cursor rules file. Project rules are managed in ./.cursor/rules/`.
+
+6.  **Generate and Configure `.mdc` Project Rules:**
+    * Navigate to the standard Cursor Project Rules directory: `./.cursor/rules`.
+    * Create new `.mdc` files based on the comprehensive project analysis performed in step 2, following the structure and best practices detailed in the `999-mdc-format.mdc` guide you have been provided, and also adhering to the Cursor documentation on rules.
+    * For each rule, ensure the frontmatter (`---...---`) is correctly formatted with `description`, `globs`, and `alwaysApply` as appropriate based on the rule's relevance to specific files or workflows identified in the analysis.
+    * Use hierarchical markdown headings and clear language in the rule content.
+    * Generate the following specific rules (or update them if they exist based on prior setup):
+        * `999-mdc-format.mdc`: Recreate the content of the `999-mdc-format.mdc` guide. Set appropriate `description` and `globs: **/*.mdc`. `alwaysApply` should be `false`.
+        * `00-core-system-overview.mdc`: Explain the purpose and layout of the `./.cursor/CORE` directory structure, including the locations of SSOT, MCP, Rule Engine components, Prompts, and Memory. Explicitly mention the `./.cursor/CORE/SSOT/.ENGINE` file as the instruction set for this type of setup. Set `alwaysApply: false`.
+        * `01-ssot-interaction-guide.mdc`: Guide interaction with the SSOT files in `./.cursor/CORE/SSOT`. Explain the purpose of each file (`.ENGINE`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.INIT`) and guidance on when to read/update them, tailored to how they were populated via analysis. Set appropriate `globs`. `alwaysApply: false`.
+        * `02-development-workflow.mdc`: Outline an inferred standard development process for this project based on the analysis, incorporating the principles from my "Development Process & Rule Adherence" User Rule. Emphasize referencing SSOT files for understanding and contributing to the existing codebase. Set appropriate `globs`. `alwaysApply: false`.
+        * Project-Specific Rules (Derived from Analysis): Based on the analysis, create 2-4 additional `.mdc` rules capturing inferred conventions, significant architectural patterns, or important aspects of the codebase (e.g., "Database Access Patterns", "Frontend Component Structure", "Error Handling Approach", "API Endpoint Conventions").
+            * Name these rules descriptively (e.g., `10-api-conventions.mdc`).
+            * Determine the appropriate `globs` based on the rule's inferred topic.
+            * Set `alwaysApply: false`.
+            * Write the rule content clearly, encoding the inferred guidance from the codebase analysis.
+        * Organize the created/updated `.mdc` files using numerical prefixes and potentially the `tasks/` subdirectory if relevant rules are generated (e.g., rules explaining how to perform specific tasks within the project).
+
+7.  **Update Rule Index/Workflow (Self-Reference):**
+    * Update the `010-workflow.mdc` rule in `./.cursor/rules/` to list the `.mdc` rules that were created or updated during this process.
+    * Review the `999-mdc-format.mdc` rule; if the process of analyzing code and generating rules from it revealed any new best practices for this type of generation, update `999-mdc-format.mdc` accordingly.
+
+8.  **Final Confirmation:** State clearly that the SSOT and Rule Engine setup for the existing project is complete based on the codebase analysis. List the directories created/ensured and the key files created/populated/updated (`.cursor/CORE/...` structure, `.cursorrules`, the `.mdc` files in `./.cursor/rules/`). Confirm that these files are now available for version control and use, and that the instructions for *this specific setup method* are recorded in `./.cursor/CORE/SSOT/.ENGINE`.
+
+**Constraints & Key Behaviors:**
+
+* Strictly adhere to the directory structure specified in step 3.
+* The source of truth for populating SSOT files (`.INIT`, `.HISTORY`, etc.) and generating project-specific rules is the *codebase analysis* performed in step 2.
+* Create `.mdc` files in `./.cursor/rules/` following the specified format and guidelines.
+* Use the specified frontmatter fields (`description`, `globs`, `alwaysApply`) correctly.
+* Generate the specific rules requested in steps 6 and 7 (updating existing ones if necessary).
+* Organize `.mdc` files using naming conventions and subdirectories.
+* Ensure the legacy `.cursorrules` file is handled minimally.
+* Do not proceed with development tasks until setup is complete and confirmed.
+* All future interactions should leverage the populated SSOT files (as the derived project state), `.ENGINE` (as the setup process instruction), and `.mdc` rules, in conjunction with my existing User Rules.
