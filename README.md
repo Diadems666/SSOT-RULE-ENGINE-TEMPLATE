@@ -1,140 +1,182 @@
-# Cursor AI SSOT, Rule Engine, and MCP Template System
+# Bottle Shop End of Trade Web Application
 
-This template provides a structured foundation for leveraging Cursor AI's advanced features – specifically the Single Source of Truth (SSOT), Project Rules, and Model Context Protocol (MCP) with a Knowledge Graph – within your projects. It includes necessary directories, initial configuration files, and core instruction files for the AI agent, designed for easy integration into new or existing codebases and suitable for GitHub.
+A web-based application for Australian bottle shops to manage end-of-trade processes, cash handling, and financial reconciliation.
 
-## 🚀 Features
+## Overview
 
-* **Centralized AI Logic:** Core setup and workflow instructions are consolidated in `./.cursor/CORE/SSOT/.ENGINE`.
-* **Dual Initialization:** Supports setting up the system in a **new project** (via prompt description) or integrating into an **existing project** (via codebase analysis).
-* **MCP Integration:** Includes structure and commands for installing and configuring standard MCP servers (Knowledge Graph, Sequential Thinking, Filesystem).
-* **Knowledge Graph Building:** Provides a workflow to build an initial Knowledge Graph representation of your project codebase using the installed MCP server.
-* **SSOT Management:** Defines a core SSOT file structure (`.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`) for project state tracking.
-* **Staged Project Rules:** Generated project-specific `.mdc` rules are placed in a staging directory (`./.cursor/CORE/RULE-ENGINE/`) for manual review and integration into `./.cursor/rules/`.
-* **Command Reference:** Includes a simple file (`./.cursor/CORE/COMS/.COMS`) listing available AI command triggers for easy access.
-* **Containerized Configuration:** Places core system configuration (`mcp.json`) within the `.cursor` directory.
-* **GitHub Ready:** Designed with version control in mind, excluding common build artifacts and potentially sensitive paths via `.gitignore` (not included in template, must be added per project).
+This application streamlines the daily reconciliation of sales, cash handling, and financial reporting for bottle shops. It features an intuitive calendar interface, robust support for all denominations of Australian currency, dedicated modules for managing safe and till floats, and comprehensive end-of-trade reconciliation.
 
-## 📂 Template Structure
+## Features
 
-This template provides the following directory and file structure within your project's root:
+- **Calendar Interface**: Navigate and select specific dates for financial management
+- **Australian Currency Support**: Handle all coin denominations (5c, 10c, 20c, 50c, $1, $2) and banknote denominations ($5, $10, $20, $50, $100)
+- **Safe Float Management**: Track and maintain the $1,500 safe float with automatic excess/deficit calculation
+- **Till Float Management**: Track, reconcile and calculate optimal denomination breakdown for the $500 till float
+- **Daily Trade Variables**: Record and track till readings, EFTPOS transactions, card payments, account charges, cash amounts, and customer counts
+- **End-of-Trade Reconciliation**: Automatically calculate variance between recorded sales and payment methods
+- **Settlement Process**: Mark daily takings as settled once reconciliation is complete
+- **Knowledge Graph Integration**: Comprehensive graph representation of application components and relationships
+- **Rule Engine**: Business rules enforcement and documentation
+
+## Technology Stack
+
+- **Backend**: Python 3.13, Flask 2.3.3 framework
+- **Frontend**: HTML5, CSS3, JavaScript (with Bootstrap 5)
+- **Database**: SQLite with SQLAlchemy 2.0.36
+- **Forms**: Flask-WTF 1.2.1 with WTForms 3.0.1
+- **Authentication**: Flask-Login 0.6.2
+- **Database Migrations**: Flask-Migrate 4.0.4
+- **Environment Variables**: python-dotenv 1.0.0
+- **Knowledge Graph**: MCP Knowledge Graph server
+
+## Known Compatibility Issues
+
+There are currently compatibility issues between SQLAlchemy 2.0.x and Python 3.13. The error appears related to type annotations in the SQLAlchemy codebase:
+
 ```
-.cursor/
-├── CORE/
-│ ├── COMS/ # AI Commands & Documentation
-│ │ ├── .COMS # User-friendly command list
-│ │ └── .COMS-ENGINE # AI documentation for commands (Logic defined in .ENGINE)
-│ ├── MCP/ # MCP Server Directories (initially empty, npm install needed)
-│ │ ├── filesystem/
-│ │ ├── knowledge-graph/
-│ │ └── sequentialthinking/
-│ ├── MEMORY/ # Persistent Memory Storage (JSONL Knowledge Graph backup)
-│ │ └── memory.jsonl # Primary memory file
-│ ├── PROMPTS/ # Storage for initial prompt, etc.
-│ │ └── .PROMPT # Created by !!-INIT-.ENGINE-!!
-│ ├── RULE-ENGINE/ # Staging area for AI-generated .mdc rules
-│ └── SSOT/ # Single Source of Truth files
-│ ├── .ENGINE # CENTRAL Setup & Workflow Logic
-│ ├── .CONTINUE # Next steps/focus
-│ ├── .CONTEXT # High-level overview
-│ ├── .FACTS # Technical decisions/constraints
-│ ├── .HISTORY # Timestamped action log
-│ ├── .INIT # Initial directives from setup
-│ ├── .MEMORY # Structured project entities/details
-│ └── .PROGRESS # Task completion status
-├── rules/ # Standard Cursor Project Rules directory (Manual Integration Target)
-│ └── 999-mdc-format.mdc # Guide for MDC format (Copy from ./CORE/RULE-ENGINE)
-└── USER-RULES.md # Rules to copy to Cursor AI settings
-└── mcp.json # MCP Server Configuration
-└── .cursorrules # Legacy rules file (minimal pointer)
+AssertionError: Class <class 'sqlalchemy.sql.elements.SQLCoreOperations'> directly inherits TypingOnly but has additional attributes {'__firstlineno__', '__static_attributes__'}.
 ```
-## 🛠️ Getting Started
 
-1. **Copy Template:** Copy the entire `.cursor` directory from this template into the root of your new or existing project. Copy the contents of `USER-RULES.md` to the User-Rules in Cursor AI settings panel (Settings > Cursor AI > User Rules).
+Potential solutions include:
+- Downgrading to Python 3.11 or 3.12
+- Waiting for SQLAlchemy to release a version compatible with Python 3.13
+- Manually patching the SQLAlchemy code
 
-2. **Configure `mcp.json`:** Open `./.cursor/mcp.json` and review the configuration. 
+## Installation
 
-3. **Initial SSOT/Rule Engine Setup:**
-   * **New Project (from Description):** In your Cursor chat, provide a detailed project description, then on a new line, type `!!-INIT-.ENGINE-!!`.
-   * **Existing Project (from Codebase Analysis):** In your Cursor chat for the project, type `!!-ADD-.ENGINE-!!`.
-   
-   *(The AI will create directories, populate initial SSOT files, handle the legacy rule, and place generated rules in `./.cursor/CORE/RULE-ENGINE/`)*
+1. Clone the repository
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   ```
+3. Activate the virtual environment:
+   - Windows: `venv\Scripts\activate`
+   - macOS/Linux: `source venv/bin/activate`
+4. Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
+5. Initialize the database:
+   ```
+   flask db init
+   flask db migrate -m "Initial migration"
+   flask db upgrade
+   ```
+6. Run the application:
+   ```
+   flask run
+   ```
 
-4. **Manually Integrate Rules:** Review the `.mdc` files generated and placed in `./.cursor/CORE/RULE-ENGINE/`. Copy the ones you want to actively use into `./.cursor/rules/`. You may need to edit them or the base `999-mdc-format.mdc` in `./.cursor/rules/` to fit your preferences.
+## Usage
 
-5. **Install MCP Servers:** Once the initial setup is confirmed complete, type `!!-INSTALL-MCP-!!` in your Cursor chat.
-   
-   *(The AI will attempt to run `npm install` in the MCP server subdirectories. Be prepared to grant administrator permissions if prompted by your OS/npm setup.)*
+After starting the application, navigate to `http://localhost:5000` in your web browser. The application will redirect you to the current day's takings page. From there, you can:
 
-6. **Restart & Build Knowledge Graph:** After `!!-INSTALL-MCP-!!` confirms completion, restart Cursor to ensure `mcp.json` is loaded and servers can start. Then, type `!!-BUILD-KG-!!` in your Cursor chat.
-   
-   *(The AI will perform a comprehensive codebase analysis and build the initial Knowledge Graph in the running MCP memory server.)*
+1. Navigate to different dates using the calendar view
+2. Enter safe and till float denomination counts
+3. Record payment method totals
+4. Calculate optimal till float denomination breakdown
+5. View the variance between recorded sales and payment methods
+6. Save and settle daily takings
 
-7. **Explore Commands:** Refer to the Available Commands section below for a list of commands you can use in the Cursor chat to interact with the system.
+## Business Rules
 
-## 📝 Available Commands
+The application enforces several key business rules:
 
-Here are the key commands you can use in the Cursor chat:
+1. Safe float must maintain a target value of $1,500
+2. Till float must maintain a target value of $500
+3. All Australian currency denominations are supported
+4. Till float makeup prioritizes smaller denominations for the float
+5. Once a day is settled, its records cannot be modified without special permissions
+6. All financial values are stored as floating-point to two decimal places
+7. Customer count must be a non-negative integer
 
-### System Setup Commands
+## Database Schema
 
-| Command | Description |
-|---------|-------------|
-| `!!-INIT-.ENGINE-!!` | Initialize the system in a **new project**. Provide a detailed project description in the chat **before** this command. |
-| `!!-ADD-.ENGINE-!!` | Integrate the system into an **existing project**. The AI will analyze your codebase. |
-| `!!-INSTALL-MCP-!!` | Install MCP servers (Knowledge Graph, etc.). Run after initialization. Ensures `mcp.json` is properly configured. |
-| `!!-BUILD-KG-!!` | Build the initial Knowledge Graph from codebase analysis. Run after installing MCP and restarting Cursor. |
+The application uses a SQLite database with the following structure:
 
-### State & Context Commands
+- **daily_takings**: Records daily financial data
+  - `date` (PRIMARY KEY): Date of the record
+  - `till_read`: Total sales from the POS
+  - `eftpos_total`: Fixed EFTPOS terminal transactions
+  - `portable_eftpos_total`: Portable EFTPOS transactions
+  - `amex`: American Express transactions
+  - `diners`: Diners Club transactions
+  - `account_charges`: Account charge transactions
+  - `total_cash`: Total cash transactions
+  - `points_redeemed`: Loyalty points redeemed
+  - `customer_count`: Number of customers
+  - `safe_float_open`: JSON string of opening safe float denominations
+  - `safe_float_close`: JSON string of closing safe float denominations
+  - `till_float_open`: JSON string of opening till float denominations
+  - `till_float_close_before_makeup`: JSON string of closing till float denominations before makeup
+  - `till_float_makeup`: JSON string of till float makeup denominations
+  - `variance`: Calculated variance between till read and payment methods
+  - `settled`: Boolean indicating if the day's takings are settled
 
-| Command | Description |
-|---------|-------------|
-| `!!-LOAD-PORTABLE-!!` | Load project state, SSOT files, and potentially populate Knowledge Graph from `./.cursor/CORE/SSOT/.PORTABLE`. |
-| `!!-UPDATE-SSOT-!!` | Update SSOT files based on recent changes. Use after completing tasks. |
-| `!!-CREATE-PORTABLE-!!` | Create a snapshot of current project state for transfer or backup. |
-| `!!-CREATE-CHAT-HISTORY-!!` | Copy current chat history into `./.cursor/CORE/SSOT/.CHAT`. |
+## Knowledge Graph
 
-### Maintenance & Documentation Commands
+The application integrates with MCP Knowledge Graph to maintain a comprehensive representation of the system's architecture, components, and relationships. This graph provides:
 
-| Command | Description |
-|---------|-------------|
-| `!!-UPDATE-DOCS-!!` | Analyze project state and update documentation, including README.md and code comments. |
-| `!!-PREPARE-GITHUB-!!` | Analyze project for GitHub readiness - update .gitignore, check for sensitive data, and verify documentation. |
+- Detailed mapping of code structure and relationships
+- Documentation of business rules and logic
+- Visualization of component interactions
+- Support for developer onboarding and maintenance
 
-For the complete list and detailed documentation, see `./.cursor/CORE/COMS/.COMS` in your project.
+To interact with the Knowledge Graph:
+1. Ensure MCP servers are installed and running
+2. Use the MCP Knowledge Graph API to query the application structure
+3. Visualize relationships between components
 
-## ⚙️ Additional Configuration
+## Development
 
-# Node.js dependencies
-node_modules/
+### Project Structure
 
-# Build outputs
-dist/
-build/
+```
+bottle_shop/
+├── __init__.py           # Application factory and extensions
+├── controllers/          # Route controllers
+│   ├── __init__.py
+│   ├── main.py           # Main routes
+│   └── takings.py        # Takings-related routes
+├── models/               # Database models
+│   ├── __init__.py
+│   └── daily_takings.py  # DailyTakings model
+├── services/             # Business logic services
+│   ├── __init__.py
+│   └── currency_service.py  # Currency handling service
+├── static/               # Static assets
+│   ├── css/              # Stylesheets
+│   └── js/               # JavaScript files
+└── templates/            # Jinja2 templates
+    ├── layout.html       # Base template
+    ├── about.html        # About page
+    ├── calendar.html     # Calendar view
+    └── takings.html      # Daily takings form
+```
 
-## 👥 Contributing
+### Rule Engine Configuration
 
-This template is designed to be a starting point. Feel free to fork, modify, and enhance it for your specific workflows and project types. Contributions to improve the core `.ENGINE` logic, add more sophisticated rule generation, or support additional MCP servers are welcome.
+The application uses a Rule Engine system to maintain and enforce business rules:
 
-## 📜 License
+```
+.cursor/CORE/RULE-ENGINE/
+├── MDC-BOTTLE-SHOP.rules  # Main domain context rules
+└── WORKFLOW.rules         # Development workflow rules
+```
 
-MIT License
+## Future Enhancements
 
-Copyright (c) 2023 [Your Name or Organization]
+Planned enhancements include:
+1. User authentication for manager access
+2. Data export functionality for reporting
+3. Dashboard for historical variance tracking
+4. Backup/restore functionality for the database
+5. Cash flow trend visualization
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## License
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Authors
+
+- Developed for Australian bottle shops to streamline end-of-trade processes

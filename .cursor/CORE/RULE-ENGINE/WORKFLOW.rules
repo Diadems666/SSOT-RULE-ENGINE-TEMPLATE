@@ -1,0 +1,43 @@
+# Bottle Shop End of Trade Web Application - Workflow Rules
+
+## Development Workflow
+1. Understand business requirements from the provided prompt
+2. Design database schema for daily takings with appropriate fields
+3. Implement core models with proper relationships and validations
+4. Create service layer for business logic, especially currency calculations
+5. Develop controllers with appropriate route handling
+6. Design and implement templates with responsive UI
+7. Test all components individually and as an integrated system
+8. Ensure all edge cases are handled properly
+
+## Feature Implementation Order
+1. Base application setup with Flask, SQLAlchemy, and templates
+2. Daily takings model with database migrations
+3. Currency denomination tracking and calculations
+4. Safe float management and validation
+5. Till float management and optimal denomination calculation
+6. End-of-trade reconciliation with variance calculation
+7. Calendar interface for navigation
+8. Settlement process with data protection
+
+## Code Quality Standards
+- All code should follow PEP 8 style guidelines
+- Functions and methods should have single responsibilities
+- Business logic should be isolated in the service layer
+- Controllers should be thin and focused on request handling
+- Database models should validate data integrity
+- Templates should be modular with reusable components
+
+## Testing Standards
+- Test currency calculations with various denomination combinations
+- Verify float balance calculations maintain target values
+- Test variance calculations with different payment method combinations
+- Ensure calendar navigation works correctly
+- Validate that settled records cannot be modified
+
+## Deployment Considerations
+- Database should be properly initialized with migrations
+- Ensure secret key is properly configured for production
+- Consider adding user authentication for production use
+- Verify responsive design works on target devices
+- Document installation and usage procedures clearly 

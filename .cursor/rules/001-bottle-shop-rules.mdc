@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Standards for the project
+globs: 
+alwaysApply: true
+
+# Bottle Shop End of Trade Web Application - MDC Rules
+
+## Purpose and Context
+- This is a Flask web application for Australian bottle shops to manage end-of-trade processes
+- The application handles daily reconciliation of sales, cash handling, and financial reporting
+- It follows a structured architecture pattern with models, controllers, services, and templates
+
+## Technical Requirements
+- Use Python 3.x with Flask framework
+- Use SQLite for database storage via SQLAlchemy ORM
+- Follow PEP 8 style guidelines for Python code
+- Implement Flask blueprints for modular organization
+- Use Flask-WTF for form handling and validation
+- Use Bootstrap 5 for responsive frontend design
+
+## Business Rules
+- Safe float must maintain a target value of $1,500
+- Till float must maintain a target value of $500
+- Support all Australian currency denominations (coins: 5c, 10c, 20c, 50c, $1, $2; notes: $5, $10, $20, $50, $100)
+- Till float makeup prioritizes smaller denominations while keeping larger denominations for banking
+- Once a day is settled, its records cannot be modified without special permissions
+- All financial values store as floating-point to two decimal places
+- Customer count must be a non-negative integer
+
+## Implementation Guidance
+- Store denomination counts as JSON strings in the database
+- Use helper methods for JSON serialization/deserialization
+- Implement clear visual feedback for variance (color-coding)
+- Use tabs for different sections of data entry
+- Ensure responsive design for desktop and tablet devices
+- Provide calendar navigation with month-based filtering
+- Use parameterized queries for all database operations
+
+## Testing and Validation
+- Validate all user inputs for correct types and ranges
+- Ensure financial calculations handle decimal precision correctly
+- Test workflow for both standard operation and edge cases
+- Verify all denomination calculations total to correct amounts
+- Test settled flag prevents unauthorized modifications
+
+## Documentation Standards
+- Include detailed docstrings for all classes and public methods
+- Document database schema and relationships
+- Provide clear user instructions for the end-of-trade process
+
+- Comment complex business logic and calculations 

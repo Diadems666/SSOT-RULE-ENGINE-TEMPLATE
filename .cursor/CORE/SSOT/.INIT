@@ -1,0 +1,47 @@
+# Bottle Shop End of Trade Web Application - Project Initialization
+
+## Project Overview
+This is a web application for Australian bottle shops to manage end-of-trade processes, cash handling, and financial reconciliation. The application streamlines daily reconciliation of sales and cash handling, providing tools for tracking denominations of Australian currency, managing safe and till floats, and performing comprehensive reconciliation.
+
+## Technology Stack
+- Backend: Python 3.x, Flask framework
+- Frontend: HTML5, CSS3, JavaScript (ES6+) with Bootstrap 5
+- Database: SQLite
+- Dev Tools: Flask-Migrate, Flask-SQLAlchemy, Flask-WTF
+
+## Core Features
+1. Calendar Interface - Date-based navigation for financial records
+2. Australian Currency Management - Support for all denominations
+3. Safe Float Management - $1,500 target value tracking
+4. Till Float Management - $500 target value with optimal denomination calculation
+5. Daily Trade Variables - POS, EFTPOS, cards, accounts, points tracking
+6. End-of-Trade Reconciliation - Automated variance calculation
+
+## Database Schema
+The SQLite database contains a daily_takings table with columns for:
+- date (PRIMARY KEY): Date of the takings record
+- till_read, eftpos_total, portable_eftpos_total, amex, diners, account_charges, total_cash, points_redeemed, customer_count
+- safe_float_open, safe_float_close (JSON strings for denomination counts)
+- till_float_open, till_float_close_before_makeup, till_float_makeup (JSON strings)
+- variance: Calculated difference between till read and payment methods
+- settled: Boolean indicating finalization status
+
+## Project Structure
+- bottle_shop/: Main application package
+  - controllers/: Route handlers (main.py, takings.py)
+  - models/: Database models (daily_takings.py)
+  - services/: Business logic (currency_service.py)
+  - static/: CSS and JavaScript files
+  - templates/: HTML templates
+  - __init__.py: Application factory
+
+## Development Guidelines
+- Follow PEP 8 for Python code
+- Use Flask blueprints for organization
+- Implement form validation for all user inputs
+- Ensure responsive design for multiple devices
+- Keep business logic in services, separate from views
+- Use parameterized queries for database operations
+
+## Initialization Date
+Created on: 2023-05-04 

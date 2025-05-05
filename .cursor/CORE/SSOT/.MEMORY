@@ -1,0 +1,59 @@
+# Bottle Shop End of Trade Web Application - Key Components & Concepts
+
+## Core Components
+
+### Models
+- **DailyTakings**: Primary data model for storing daily financial records
+  - Properties: date, till_read, payment methods, float data, variance, settled status
+  - Handles JSON serialization/deserialization for denomination data
+
+### Services
+- **CurrencyService**: Handles all denomination-related calculations
+  - Defines Australian currency denominations and values
+  - Calculates total values from denomination counts
+  - Determines optimal float denomination breakdown
+  - Formats currency values for display
+
+### Controllers
+- **MainController**: Handles index and about routes
+- **TakingsController**: Manages daily takings and calendar functionality
+  - Routes for viewing/editing daily records
+  - API endpoints for float calculations and transfers
+  - Calendar navigation and filtering
+
+### Templates
+- **layout.html**: Base template with common structure and navigation
+- **calendar.html**: Monthly calendar view for date selection
+- **takings.html**: Complex form for daily takings entry and reconciliation
+- **about.html**: Information page about the application
+
+## Key Concepts
+
+### Safe Float Management
+- Target value: $1,500
+- Tracks opening and closing denomination counts
+- Calculates excess/deficit compared to target
+- Supports transfers to/from till float
+
+### Till Float Management
+- Target value: $500
+- Tracks opening, closing, and makeup denomination counts
+- Intelligent algorithm for optimal denomination breakdown
+- Prioritizes smaller denominations for the float
+
+### End-of-Trade Reconciliation
+- Records various payment methods (EFTPOS, cards, cash, etc.)
+- Calculates variance between till read and payment methods
+- Provides visual feedback for variance (color-coding)
+- Includes settlement functionality to protect finalized records
+
+### Australian Currency Management
+- Supports all coin denominations: 5c, 10c, 20c, 50c, $1, $2
+- Supports all note denominations: $5, $10, $20, $50, $100
+- Maintains ordered list for prioritization
+- Handles value calculations with appropriate decimal precision
+
+### Date-Based Navigation
+- Calendar interface for selecting dates
+- Month-based filtering and navigation
+- Visual indication of settled vs. unsettled days 

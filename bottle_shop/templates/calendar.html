@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+
+{% block title %}Calendar - End of Trade{% endblock %}
+
+{% block extra_css %}
+<style>
+    .calendar-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .month-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .calendar {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .calendar th, .calendar td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+    }
+    .calendar th {
+        background-color: #f8f9fa;
+    }
+    .today {
+        background-color: #e6f7ff;
+        font-weight: bold;
+    }
+    .settled {
+        background-color: #d4edda;
+    }
+    .unsettled {
+        background-color: #fff3cd;
+    }
+    .calendar a {
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        color: #212529;
+    }
+    .calendar a:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="month-header">
+        <a href="{{ url_for('takings.calendar_view', year=prev_year, month=prev_month) }}" class="btn btn-outline-primary">&laquo; Previous Month</a>
+        <h2>{{ month_name }} {{ year }}</h2>
+        <a href="{{ url_for('takings.calendar_view', year=next_year, month=next_month) }}" class="btn btn-outline-primary">Next Month &raquo;</a>
+    </div>
+    
+    <table class="calendar">
+        <thead>
+            <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in calendar_dates %}
+            <tr>
+                {% for day, current_date in week %}
+                <td class="{% if current_date == today %}today{% elif current_date in settled_dates %}settled{% elif current_date in unsettled_dates %}unsettled{% endif %}">
+                    {% if day != 0 %}
+                    <a href="{{ url_for('takings.view_date', year=current_date.year, month=current_date.month, day=current_date.day) }}">
+                        {{ day }}
+                        {% if current_date in settled_dates %}
+                        <span class="badge bg-success">Settled</span>
+                        {% elif current_date in unsettled_dates %}
+                        <span class="badge bg-warning text-dark">In Progress</span>
+                        {% endif %}
+                    </a>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calendar month name formatting
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"];
+        const monthHeader = document.querySelector('.month-header h2');
+        const currentMonth = parseInt("{{ month }}");
+        monthHeader.textContent = monthNames[currentMonth - 1] + " {{ year }}";
+        
+        // Generate calendar data
+        const calendar_dates = [];
+        const currentYear = parseInt("{{ year }}");
+        
+        const firstDay = new Date(currentYear, currentMonth - 1, 1);
+        const lastDay = new Date(currentYear, currentMonth, 0);
+        
+        let currentDay = 1;
+        let currentDate = new Date(currentYear, currentMonth - 1, currentDay);
+        
+        // Get first day of month's weekday (0 = Sunday, 6 = Saturday)
+        const firstDayOfWeek = firstDay.getDay();
+        
+        // Create calendar rows
+        let calendarHtml = '';
+        let dayCounter = 1;
+        
+        for (let i = 0; i < 6; i++) { // Up to 6 weeks
+            let rowHtml = '<tr>';
+            
+            for (let j = 0; j < 7; j++) { // 7 days in a week
+                if ((i === 0 && j < firstDayOfWeek) || dayCounter > lastDay.getDate()) {
+                    // Empty cell
+                    rowHtml += '<td></td>';
+                } else {
+                    currentDate = new Date(currentYear, currentMonth - 1, dayCounter);
+                    
+                    // Check if it's today
+                    const today = new Date();
+                    const isToday = currentDate.getDate() === today.getDate() && 
+                                   currentDate.getMonth() === today.getMonth() && 
+                                   currentDate.getFullYear() === today.getFullYear();
+                    
+                    let cellClass = isToday ? 'today' : '';
+                    
+                    // Create the cell
+                    rowHtml += `<td class="${cellClass}">`;
+                    rowHtml += `<a href="{{ url_for('takings.calendar_view') }}/${currentYear}/${currentMonth}/${dayCounter}">${dayCounter}</a>`;
+                    rowHtml += '</td>';
+                    
+                    dayCounter++;
+                }
+            }
+            
+            rowHtml += '</tr>';
+            
+            // Only add the row if it has at least one day
+            if (rowHtml.includes('>1<') || rowHtml.includes('>2<')) {
+                calendarHtml += rowHtml;
+            }
+            
+            // Break if we've gone through all days of the month
+            if (dayCounter > lastDay.getDate()) {
+                break;
+            }
+        }
+    });
+</script>
+{% endblock %} 

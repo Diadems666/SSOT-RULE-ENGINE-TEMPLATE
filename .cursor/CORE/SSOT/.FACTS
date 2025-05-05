@@ -1,0 +1,59 @@
+# Bottle Shop End of Trade Web Application - Key Facts
+
+## Currency Denominations
+- Australian Coins: 5c, 10c, 20c, 50c, $1, $2
+- Australian Notes: $5, $10, $20, $50, $100
+- DENOMINATION_ORDER = ['5c', '10c', '20c', '50c', '$1', '$2', '$5', '$10', '$20', '$50', '$100']
+
+## Float Values
+- Safe Float Target: $1,500
+- Till Float Target: $500
+
+## Till Float Makeup Rules
+1. Prioritize smallest to largest denominations for the till float
+2. Total must exactly equal $500
+3. Maintain sensible quantities (don't use excessive small coins)
+4. Reserve $50 and $100 notes for banking rather than float
+
+## Database Structure
+- Primary table: daily_takings
+- Primary key: date (DATE)
+- Float fields stored as JSON strings
+- All payment fields can accept NULL/empty values
+- Variance calculation: Till Read - Sum(Payment Methods)
+
+## API Endpoints
+- /takings/calendar - Calendar view
+- /takings/YYYY/MM/DD - Daily takings view/edit
+- /takings/api/calculate-optimal-float - Optimal float calculation
+- /takings/api/safe-float-transfer - Safe/till float transfers
+
+## Tech Stack Versions
+- Python: 3.x
+- Flask: 2.3.3
+- SQLAlchemy: 2.0.20
+- Flask-SQLAlchemy: 3.1.1
+- Flask-WTF: 1.2.1
+- Bootstrap: 5.3.0
+- jQuery: 3.6.0
+
+## Business Rules
+- Once a day is "Settled", its records cannot be modified
+- All financial values are stored as floating-point (REAL) to two decimal places
+- Customer count must be a non-negative integer
+- Safe float and till float must maintain their target values at end of day
+- Excess cash from safe float should be transferred to till
+- Till float is made up from available denominations before banking
+
+## System Configuration
+- Development mode with debug enabled
+- SQLite database stored in instance folder
+- Forms use CSRF protection
+- No authentication implemented (single-user system)
+
+## UI/UX Standards
+- Color coding for variance (red/green)
+- Tabs for different sections of data entry
+- Responsive design for desktop and tablet
+- Clear visual feedback for settled vs. unsettled days
+- Calendar navigation with month-based filtering 
