@@ -1,6 +1,6 @@
 ## Central Instructions for SSOT, Rule Engine, and MCP Setup
 
-**Objective:** This file (`./.cursor/CORE/SSOT/.ENGINE`) contains the consolidated instruction set for initiating various system workflows: base SSOT/Rule Engine setup, MCP server setup, Knowledge Graph building, SSOT maintenance, and utility functions (portable state, chat history, docs, GitHub prep). It supports multiple distinct workflows triggered by specific phrases in the Cursor chat.
+**Objective:** This file (`./.cursor/CORE/SSOT/.ENGINE`) contains the consolidated instruction set for initiating various system workflows: base SSOT/Rule Engine setup, MCP server setup, Knowledge Graph building, SSOT maintenance, analytics system management, and utility functions (portable state, chat history, docs, GitHub prep). It supports multiple distinct workflows triggered by specific phrases in the Cursor chat.
 
 **Trigger Mechanisms:**
 1.  `!!-INIT-.ENGINE-!!`: Used in a chat *after* providing a detailed project description.
@@ -13,6 +13,10 @@
 8.  `!!-CREATE-CHAT-HISTORY-!!`: Copies current chat history to ./.cursor/CORE/SSOT/.CHAT.
 9.  `!!-UPDATE-DOCS-!!`: Analyzes project state and updates documentation (e.g., README.md).
 10. `!!-PREPARE-GITHUB-!!`: Analyzes project for GitHub readiness (.gitignore, cleanup).
+11. `!!-LAUNCH-DASHBOARD-!!`: Launches the analytics dashboard system.
+12. `!!-ANALYZE-PROJECT-!!`: Runs comprehensive project analysis and health scoring.
+13. `!!-VIEW-DASHBOARD-!!`: Opens the analytics dashboard in browser.
+14. `!!-HEALTH-CHECK-!!`: Performs quick project health assessment.
 
 **Workflow Execution:**
 
@@ -33,6 +37,7 @@ Upon receiving *any* recognized trigger phrase, execute the instructions below b
             * Leverage description & User Rules ("Project Setup...") to auto-populate `.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`.
             * Acknowledge `.PROMPT` as full source, others as derived from description.
             * **Proceed to Step 3 (Create Directory Structure).**
+            * **After completion, automatically execute `!!-LAUNCH-DASHBOARD-!!`.**
 
     * **ELSE IF Trigger is `!!-ADD-.ENGINE-!!`:**
         * **Input Source:** Comprehensive codebase analysis.
@@ -44,6 +49,7 @@ Upon receiving *any* recognized trigger phrase, execute the instructions below b
             * Leverage analysis & User Rules to auto-populate `.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`. **Do NOT create `.PROMPT`.**
             * Acknowledge analysis as source, SSOT as derived state.
             * **Proceed to Step 3 (Create Directory Structure).**
+            * **After completion, automatically execute `!!-LAUNCH-DASHBOARD-!!`.**
 
     * **ELSE IF Trigger is `!!-INSTALL-MCP-!!`:**
         * **Prerequisite Check:** Verify `./.cursor/CORE/MCP/knowledge-graph`, `./sequentialthinking`, `./filesystem` exist. Verify `./.cursor/mcp.json` exists. Halt with instructions if checks fail.
@@ -149,6 +155,54 @@ Upon receiving *any* recognized trigger phrase, execute the instructions below b
             * **Report Issues:** Report any identified issues (e.g., potential sensitive files not ignored, missing docs, lint errors).
             * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording GitHub preparation actions via `!!-PREPARE-GITHUB-!!`.
             * **Final Confirmation:** State project workspace analyzed and `.gitignore` updated for GitHub readiness. Report any potential issues found.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-LAUNCH-DASHBOARD-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/CORE/ANALYTICS/` directory exists. If missing, create it with core analytics files.
+        * **Input Source:** Current project state and analytics configuration.
+        * **Action:**
+            * State analytics dashboard launch is beginning.
+            * Navigate to `./.cursor/CORE/ANALYTICS`.
+            * Execute Python startup script: `python startup.py` to launch dashboard in background.
+            * Verify dashboard is accessible (typically http://localhost:8080 or next available port).
+            * Create/update USER-RULES template file for easy copying.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording dashboard launch via `!!-LAUNCH-DASHBOARD-!!`.
+            * **Final Confirmation:** State dashboard launched successfully with URL. Confirm features available: Analytics, Rule Engine Management, USER-RULES Template, SSOT System Overview.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-ANALYZE-PROJECT-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/CORE/ANALYTICS/analytics_engine.py` exists. If missing, advise running `!!-LAUNCH-DASHBOARD-!!` first.
+        * **Input Source:** Complete project analysis via analytics engine.
+        * **Action:**
+            * State comprehensive project analysis is beginning.
+            * Navigate to `./.cursor/CORE/ANALYTICS`.
+            * Execute analytics engine: `python analytics_engine.py` to perform full analysis.
+            * Review generated analytics reports (JSON and Markdown formats).
+            * Display key insights: project health score, recommendations, system status.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording analysis completion via `!!-ANALYZE-PROJECT-!!`.
+            * **Final Confirmation:** State analysis complete. Provide health score and top 3 recommendations. Suggest viewing full dashboard for detailed insights.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-VIEW-DASHBOARD-!!`:**
+        * **Prerequisite Check:** Verify dashboard is running by checking for dashboard process or attempting connection to typical ports.
+        * **Action:**
+            * State opening analytics dashboard.
+            * Attempt to detect running dashboard (check ports 8080-8090).
+            * If dashboard not running, automatically execute `!!-LAUNCH-DASHBOARD-!!`.
+            * Open browser to dashboard URL.
+            * **Final Confirmation:** State dashboard opened in browser with URL.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-HEALTH-CHECK-!!`:**
+        * **Input Source:** Quick system health assessment.
+        * **Action:**
+            * State performing quick health check.
+            * Check SSOT system completeness (count existing .INIT, .CONTEXT, .FACTS, etc.).
+            * Check MCP configuration (verify mcp.json exists).
+            * Check rule engine status (count active rules in .cursor/rules/).
+            * Check analytics system (verify ANALYTICS directory and key files).
+            * Calculate quick health percentage based on system completeness.
+            * **Final Confirmation:** State health check complete. Provide overall health percentage and any critical issues found.
             * **STOP.**
 
     * **ELSE (Unrecognized Trigger):**

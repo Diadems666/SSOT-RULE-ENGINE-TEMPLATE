@@ -11,6 +11,7 @@ The SSOT-RULE-ENGINE-TEMPLATE transforms your development workflow by providing:
 - **🎛️ Context-Aware AI Behavior**: Dynamic rule system that adapts to your project needs
 - **🔧 Advanced AI Capabilities**: Specialized MCP servers for enhanced reasoning and analysis
 - **📊 Intelligent Project Tracking**: Automated progress monitoring and documentation
+- **📈 Advanced Analytics**: Real-time project health monitoring and performance insights
 
 ## ✨ Key Features
 
@@ -36,6 +37,14 @@ The SSOT-RULE-ENGINE-TEMPLATE transforms your development workflow by providing:
 - Smart codebase understanding and documentation
 - GitHub preparation and repository optimization
 - Comprehensive testing and quality assurance
+
+### 📈 Advanced Analytics System
+- Real-time project health scoring (0-100 scale)
+- Interactive web dashboard with live visualizations
+- Multi-dimensional analysis (SSOT, MCP, Rules, Project structure)
+- Intelligent recommendations engine with priority suggestions
+- Development velocity tracking and trend analysis
+- System performance monitoring and optimization insights
 
 ## 🚀 Quick Start
 
@@ -82,10 +91,14 @@ The SSOT-RULE-ENGINE-TEMPLATE transforms your development workflow by providing:
 
 | Command | Purpose | When to Use |
 |---------|---------|-------------|
-| `!!-INIT-.ENGINE-!!` | Initialize new project | After providing project description |
-| `!!-ADD-.ENGINE-!!` | Add to existing project | For existing codebases |
+| `!!-INIT-.ENGINE-!!` | Initialize new project *(auto-launches dashboard)* | After providing project description |
+| `!!-ADD-.ENGINE-!!` | Add to existing project *(auto-launches dashboard)* | For existing codebases |
 | `!!-INSTALL-MCP-!!` | Install MCP servers | After INIT or ADD |
 | `!!-BUILD-KG-!!` | Build Knowledge Graph | After MCP installation |
+| `!!-LAUNCH-DASHBOARD-!!` | Launch analytics dashboard with visual rule engine | Manual dashboard launch anytime |
+| `!!-ANALYZE-PROJECT-!!` | Run comprehensive project analysis | For detailed health scoring |
+| `!!-VIEW-DASHBOARD-!!` | Open analytics dashboard in browser | Quick dashboard access |
+| `!!-HEALTH-CHECK-!!` | Quick system assessment | For rapid status overview |
 | `!!-UPDATE-SSOT-!!` | Sync project state | After significant changes |
 | `!!-CREATE-PORTABLE-!!` | Create project snapshot | For backup/transfer |
 | `!!-LOAD-PORTABLE-!!` | Load project snapshot | To restore state |
@@ -113,9 +126,16 @@ The SSOT-RULE-ENGINE-TEMPLATE transforms your development workflow by providing:
 │   ├── RULE-ENGINE/            # Generated rules staging
 │   ├── MEMORY/                 # Persistent memory storage
 │   ├── PROMPTS/                # System prompts
+│   ├── ANALYTICS/              # Analytics engine and dashboard
+│   │   ├── analytics_engine.py # Project health analysis
+│   │   ├── dashboard.py        # Web dashboard with visual rule engine
+│   │   ├── startup.py          # Dashboard auto-launch script
+│   │   ├── USER-RULES-TEMPLATE.md # Template for easy USER-RULES setup
+│   │   └── dashboard/          # Generated dashboard files
 │   └── DOCS/                   # Documentation
 ├── rules/                      # Active rule files
-└── mcp.json                    # MCP configuration
+├── mcp.json                    # MCP configuration
+└── launch-dashboard.py         # Quick dashboard launcher
 ```
 
 ## 🔧 Configuration
@@ -170,6 +190,31 @@ Your guidelines and instructions...
 !!-LOAD-PORTABLE-!!
 ```
 
+### Project Analytics & Monitoring
+```bash
+# Quick health assessment:
+!!-HEALTH-CHECK-!!
+
+# Comprehensive analysis:
+!!-ANALYZE-PROJECT-!!
+
+# Launch interactive dashboard with visual rule engine:
+!!-LAUNCH-DASHBOARD-!!
+
+# Open dashboard in browser (if already running):
+!!-VIEW-DASHBOARD-!!
+
+# Manual launch options:
+python launch-dashboard.py                    # Quick launcher from project root
+python .cursor/CORE/ANALYTICS/startup.py     # Direct startup script
+```
+
+**Dashboard Features:**
+- 📊 **Analytics Tab**: Real-time health scoring and project metrics
+- ⚙️ **Rule Engine Tab**: Visual rule management interface
+- 📋 **USER-RULES Tab**: Template copying for easy setup  
+- 🗂️ **SSOT Tab**: System state monitoring and file inspection
+
 ## 🎯 Benefits
 
 ### For Developers
@@ -189,6 +234,9 @@ Your guidelines and instructions...
 - **Better Architecture**: AI-guided architectural decisions and refactoring
 - **Enhanced Testing**: Intelligent test generation and coverage analysis
 - **Documentation**: Always up-to-date project documentation
+- **Health Monitoring**: Real-time project health scoring and trend analysis
+- **Performance Insights**: Actionable recommendations for optimization
+- **Visual Analytics**: Interactive dashboards for comprehensive project oversight
 
 ## 📈 Advanced Features
 
@@ -197,6 +245,24 @@ The system builds a comprehensive knowledge graph of your project:
 - **Entities**: Files, functions, classes, modules, configurations
 - **Relationships**: Dependencies, calls, implementations, contains
 - **Observations**: Comments, metrics, patterns, decisions
+
+### Advanced Analytics Dashboard
+Real-time project monitoring and insights:
+- **Health Scoring**: Comprehensive 0-100 scale project health assessment
+- **System Analysis**: SSOT (30%), MCP (30%), Rules (25%), General (15%) breakdown
+- **Interactive Visualizations**: Charts, graphs, and real-time data displays
+- **Intelligent Recommendations**: Priority-based suggestions for improvement
+- **Development Velocity**: Activity tracking and productivity metrics
+- **Web Interface**: Responsive dashboard with auto-refresh capabilities
+
+```bash
+# Launch analytics dashboard
+cd .cursor/CORE/ANALYTICS
+python dashboard.py  # Opens browser automatically
+
+# Generate static reports
+python analytics_engine.py  # Creates JSON and Markdown reports
+```
 
 ### Project Portability
 Create and restore complete project snapshots:
@@ -237,6 +303,19 @@ npm run build  # In each MCP server directory
 - Verify glob patterns match intended files
 - Review rule staging in `CORE/RULE-ENGINE/`
 
+### Analytics Dashboard Issues
+```bash
+# Generate dashboard without starting server
+cd .cursor/CORE/ANALYTICS
+python dashboard.py --generate-only
+
+# Start dashboard on custom port
+python dashboard.py --port 8080 --no-browser
+
+# Run analytics analysis only
+python analytics_engine.py
+```
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -265,10 +344,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🗺️ Roadmap
 
 - [ ] Visual Knowledge Graph explorer
-- [ ] Advanced analytics and metrics
+- [x] Advanced analytics and metrics
 - [ ] Integration with popular development tools
 - [ ] Multi-language support expansion
 - [ ] Cloud-based Knowledge Graph synchronization
+- [ ] Machine learning-based project predictions
+- [ ] Team collaboration analytics
+- [ ] CI/CD pipeline integration
 
 ---
 
