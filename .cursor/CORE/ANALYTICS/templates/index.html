@@ -1,38 +1,139 @@
-
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SSOT Rule Engine Dashboard</title>
-        <link rel="stylesheet" href="/static/css/style.css">
-    </head>
-    <body>
-        <div class="dashboard">
-            <header>
-                <h1>SSOT Rule Engine Dashboard</h1>
-            </header>
-            
-            <main>
-                <section class="health-metrics">
-                    <h2>Project Health</h2>
-                    <div id="health-scores"></div>
-                </section>
-                
-                <section class="rule-engine">
-                    <h2>Rule Engine</h2>
-                    <div class="triggers">
-                        <h3>Available Triggers</h3>
-                        <div id="trigger-list"></div>
-                    </div>
-                    <div class="rule-stats">
-                        <h3>Rule Statistics</h3>
-                        <div id="rule-stats"></div>
-                    </div>
-                </section>
-            </main>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSOT Rule Engine Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Vis.js for KG visualization -->
+    <link href="https://unpkg.com/vis-network/dist/dist/vis-network.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/kg-visualizer.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">SSOT Rule Engine</a>
+            <div class="d-flex">
+                <span class="navbar-text me-3">Health Score: <span id="health-score">100</span></span>
+                <button class="btn btn-outline-light btn-sm" id="settings-toggle">
+                    <i class="bi bi-gear"></i>
+                </button>
+            </div>
         </div>
-        <script src="/static/js/dashboard.js"></script>
-    </body>
-    </html>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Main Dashboard -->
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Rule Engine Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="rule-engine-status">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Knowledge Graph</h5>
+                        <button class="btn btn-sm btn-primary float-end" id="kg-refresh">
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="kg-container" style="height: 400px;"></div>
+                        <div id="kg-node-details" class="mt-3"></div>
+                        <div id="kg-error" class="alert alert-danger" style="display: none;"></div>
+                        <small class="text-muted">Last updated: <span id="kg-last-update">Never</span></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <!-- AI Chat -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">AI Assistant</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="ai-chat-history" class="chat-history mb-3"></div>
+                        <form id="ai-chat-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ai-chat-input" 
+                                       placeholder="Ask a question...">
+                                <button class="btn btn-primary" type="submit">Send</button>
+                            </div>
+                        </form>
+                        <small class="text-muted">Status: <span id="ai-status">Ready</span></small>
+                    </div>
+                </div>
+
+                <!-- Health Monitoring -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">System Health</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="health-details">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settings-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dashboard Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="settings-form">
+                        <div class="mb-3">
+                            <label class="form-label">Theme</label>
+                            <select class="form-select" id="theme-select">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Refresh Interval (seconds)</label>
+                            <input type="number" class="form-control" id="refresh-interval" 
+                                   min="5" max="60" value="30">
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notifications-enabled">
+                                <label class="form-check-label">Enable Notifications</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-settings">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Vis.js -->
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/kg-visualizer.js"></script>
+    <script src="/static/js/ai-integration.js"></script>
+</body>
+</html>
     

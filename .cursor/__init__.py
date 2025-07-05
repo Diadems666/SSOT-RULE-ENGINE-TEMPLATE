@@ -1,3 +1,3 @@
 """
-SSOT Cursor package
+SSOT Rule Engine package initialization
 """ 

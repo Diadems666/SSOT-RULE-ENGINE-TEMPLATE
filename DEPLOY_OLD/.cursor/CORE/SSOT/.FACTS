@@ -1,0 +1,17 @@
+# Core System Facts
+
+SYSTEM_REQUIREMENTS:
+- Python 3.8+
+- pip package manager
+- Local file system access
+
+CONSTRAINTS:
+- Single process execution
+- Local file system only
+- No external API dependencies
+
+CAPABILITIES:
+- Rule processing
+- Event handling
+- State management
+- Basic pattern matching 

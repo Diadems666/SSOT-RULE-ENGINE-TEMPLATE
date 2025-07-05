@@ -1,0 +1,18 @@
+# System Context Overview
+
+PROJECT_TYPE=SSOT Rule Engine
+VERSION=1.0.0
+ENVIRONMENT=Development
+
+COMPONENTS:
+- Rule Engine (Core processing)
+- SSOT System (State management)
+- Communication Layer (Event handling)
+
+INTEGRATIONS:
+- Cursor AI
+- Python Runtime
+- Local File System
+
+STATUS:
+System is initialized and ready for rule configuration. 

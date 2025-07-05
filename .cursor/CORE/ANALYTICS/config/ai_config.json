@@ -1,4 +1,14 @@
 {
+    "max_history": 10,
+    "temperature": 0.7,
+    "max_tokens": 1000,
+    "model": "gemma-3b-it",
+    "model_path": "./.cursor/CORE/AI/models",
+    "cache_enabled": true,
+    "cache_ttl": 3600,
+    "feedback_enabled": true,
+    "auto_update_metrics": true,
+    "health_check_interval": 30000,
     "llm": {
         "model": "cursor-ai",
         "temperature": 0.7,

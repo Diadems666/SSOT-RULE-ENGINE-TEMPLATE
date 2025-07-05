@@ -1,284 +1,155 @@
-// Initialize the Knowledge Graph visualization
-let network = null;
-let nodes = new vis.DataSet([]);
-let edges = new vis.DataSet([]);
+/**
+ * Knowledge Graph Visualizer for SSOT Rule Engine Dashboard
+ */
 
-// Configuration for the vis.js network
-const options = {
-    nodes: {
-        shape: 'dot',
-        size: 16,
-        font: {
-            size: 14,
-            color: '#2c3e50'
-        },
-        borderWidth: 2,
-        shadow: true
-    },
-    edges: {
-        width: 2,
-        color: { color: '#2c3e50', highlight: '#4a90e2' },
-        smooth: {
-            type: 'continuous'
-        },
-        arrows: {
-            to: { enabled: true, scaleFactor: 0.5 }
-        }
-    },
-    physics: {
-        stabilization: false,
-        barnesHut: {
-            gravitationalConstant: -80000,
-            springConstant: 0.001,
-            springLength: 200
-        }
-    },
-    manipulation: {
-        enabled: true,
-        addNode: function(nodeData, callback) {
-            document.getElementById('node-operation').innerHTML = "Add Node";
-            document.getElementById('node-label').value = nodeData.label || "";
-            document.getElementById('node-type').value = "";
-            document.getElementById('node-modal').style.display = 'block';
-            
-            document.getElementById('node-saveButton').onclick = async () => {
-                nodeData.label = document.getElementById('node-label').value;
-                nodeData.title = document.getElementById('node-label').value;
-                nodeData.type = document.getElementById('node-type').value;
-                nodeData.color = getNodeColor(nodeData.type);
-                document.getElementById('node-modal').style.display = 'none';
-                
-                try {
-                    await createKGEntity(nodeData);
-                    callback(nodeData);
-                } catch (error) {
-                    showToast('Failed to create entity: ' + error.message, 'error');
+class KGVisualizer {
+    constructor() {
+        this.container = document.getElementById('kg-container');
+        this.network = null;
+        this.data = {
+            nodes: new vis.DataSet(),
+            edges: new vis.DataSet()
+        };
+        this.options = {
+            nodes: {
+                shape: 'dot',
+                size: 16,
+                font: {
+                    size: 12,
+                    face: 'Arial'
                 }
-            };
-        },
-        editNode: function(nodeData, callback) {
-            document.getElementById('node-operation').innerHTML = "Edit Node";
-            document.getElementById('node-label').value = nodeData.label;
-            document.getElementById('node-type').value = nodeData.type || "";
-            document.getElementById('node-modal').style.display = 'block';
-            
-            document.getElementById('node-saveButton').onclick = async () => {
-                const oldLabel = nodeData.label;
-                nodeData.label = document.getElementById('node-label').value;
-                nodeData.title = document.getElementById('node-label').value;
-                nodeData.type = document.getElementById('node-type').value;
-                nodeData.color = getNodeColor(nodeData.type);
-                document.getElementById('node-modal').style.display = 'none';
-                
-                try {
-                    await updateKGEntity(oldLabel, nodeData);
-                    callback(nodeData);
-                } catch (error) {
-                    showToast('Failed to update entity: ' + error.message, 'error');
+            },
+            edges: {
+                width: 1,
+                color: { color: '#666666' },
+                arrows: {
+                    to: { enabled: true, scaleFactor: 0.5 }
                 }
-            };
-        },
-        deleteNode: async function(data, callback) {
-            try {
-                await deleteKGEntity(data.nodes[0]);
-                callback(data);
-            } catch (error) {
-                showToast('Failed to delete entity: ' + error.message, 'error');
+            },
+            physics: {
+                stabilization: false,
+                barnesHut: {
+                    gravitationalConstant: -80000,
+                    springConstant: 0.001,
+                    springLength: 200
+                }
             }
-        },
-        addEdge: function(edgeData, callback) {
-            document.getElementById('edge-operation').innerHTML = "Add Relation";
-            document.getElementById('edge-label').value = "";
-            document.getElementById('edge-modal').style.display = 'block';
-            
-            document.getElementById('edge-saveButton').onclick = async () => {
-                edgeData.label = document.getElementById('edge-label').value;
-                document.getElementById('edge-modal').style.display = 'none';
-                
-                try {
-                    await createKGRelation(edgeData);
-                    callback(edgeData);
-                } catch (error) {
-                    showToast('Failed to create relation: ' + error.message, 'error');
-                }
-            };
-        },
-        deleteEdge: async function(data, callback) {
-            try {
-                await deleteKGRelation(data.edges[0]);
-                callback(data);
-            } catch (error) {
-                showToast('Failed to delete relation: ' + error.message, 'error');
-            }
+        };
+    }
+
+    async initialize() {
+        if (!this.container) {
+            console.error('KG container not found');
+            return;
+        }
+
+        try {
+            // Create network
+            this.network = new vis.Network(
+                this.container,
+                this.data,
+                this.options
+            );
+
+            // Setup event listeners
+            this.network.on('selectNode', this._handleNodeSelect.bind(this));
+            this.network.on('stabilized', this._handleStabilized.bind(this));
+
+            // Load initial data
+            await this.refreshData();
+
+        } catch (error) {
+            console.error('Failed to initialize KG visualizer:', error);
+            throw error;
         }
     }
-};
 
-// Initialize the visualization
-function initKGVisualizer() {
-    const container = document.getElementById('kg-visualizer');
-    network = new vis.Network(container, { nodes, edges }, options);
-    
-    // Add event listeners
-    network.on('selectNode', function(params) {
-        if (params.nodes.length === 1) {
+    async refreshData() {
+        try {
+            const response = await fetch('/api/kg/visualize');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Update visualization
+            this.data.nodes.clear();
+            this.data.edges.clear();
+            
+            this.data.nodes.add(data.nodes);
+            this.data.edges.add(data.edges);
+
+            // Update timestamp
+            this._updateTimestamp(data.timestamp);
+
+        } catch (error) {
+            console.error('Failed to refresh KG data:', error);
+            this._showError(error.message);
+        }
+    }
+
+    _handleNodeSelect(params) {
+        if (params.nodes.length > 0) {
             const nodeId = params.nodes[0];
-            showNodeDetails(nodeId);
+            const node = this.data.nodes.get(nodeId);
+            this._showNodeDetails(node);
         }
-    });
-    
-    // Load initial data
-    loadKGData();
-}
-
-// Color scheme for different node types
-function getNodeColor(type) {
-    const colors = {
-        'file': '#27ae60',
-        'function': '#2980b9',
-        'class': '#8e44ad',
-        'module': '#c0392b',
-        'package': '#d35400',
-        'default': '#2c3e50'
-    };
-    return colors[type] || colors.default;
-}
-
-// Load Knowledge Graph data from the backend
-async function loadKGData() {
-    try {
-        const response = await fetch('/api/kg/data');
-        const data = await response.json();
-        
-        // Clear existing data
-        nodes.clear();
-        edges.clear();
-        
-        // Add nodes
-        data.nodes.forEach(node => {
-            nodes.add({
-                id: node.id,
-                label: node.label,
-                title: node.title || node.label,
-                type: node.type,
-                color: getNodeColor(node.type)
-            });
-        });
-        
-        // Add edges
-        data.edges.forEach(edge => {
-            edges.add({
-                id: edge.id,
-                from: edge.from,
-                to: edge.to,
-                label: edge.label
-            });
-        });
-    } catch (error) {
-        console.error('Error loading KG data:', error);
-        showToast('Failed to load Knowledge Graph data', 'error');
     }
-}
 
-// Show node details in the sidebar
-async function showNodeDetails(nodeId) {
-    try {
-        const response = await fetch(`/api/kg/node/${nodeId}`);
-        const nodeData = await response.json();
-        
-        const detailsContainer = document.getElementById('node-details');
-        detailsContainer.innerHTML = `
-            <h3>${nodeData.label}</h3>
-            <p><strong>Type:</strong> ${nodeData.type}</p>
-            <div class="node-observations">
-                <h4>Observations</h4>
-                <ul>
-                    ${nodeData.observations.map(obs => `<li>${obs}</li>`).join('')}
-                </ul>
-            </div>
-            <div class="node-relations">
-                <h4>Relations</h4>
-                <ul>
-                    ${nodeData.relations.map(rel => `
-                        <li>${rel.from} <strong>${rel.type}</strong> ${rel.to}</li>
-                    `).join('')}
-                </ul>
-            </div>
+    _handleStabilized() {
+        console.log('Network stabilized');
+    }
+
+    _showNodeDetails(node) {
+        const detailsElement = document.getElementById('kg-node-details');
+        if (!detailsElement) return;
+
+        detailsElement.innerHTML = `
+            <h3>${this._escapeHtml(node.label)}</h3>
+            <p>Type: ${this._escapeHtml(node.type)}</p>
+            <p>ID: ${this._escapeHtml(node.id)}</p>
         `;
+    }
+
+    _updateTimestamp(timestamp) {
+        const element = document.getElementById('kg-last-update');
+        if (element) {
+            element.textContent = new Date(timestamp).toLocaleString();
+        }
+    }
+
+    _showError(message) {
+        const element = document.getElementById('kg-error');
+        if (element) {
+            element.textContent = `Error: ${message}`;
+            element.style.display = 'block';
+        }
+    }
+
+    _escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+}
+
+// Initialize visualizer
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const visualizer = new KGVisualizer();
+        await visualizer.initialize();
+
+        // Setup refresh button
+        const refreshButton = document.getElementById('kg-refresh');
+        if (refreshButton) {
+            refreshButton.addEventListener('click', () => visualizer.refreshData());
+        }
+
     } catch (error) {
-        console.error('Error loading node details:', error);
-        showToast('Failed to load node details', 'error');
+        console.error('Failed to setup KG visualizer:', error);
     }
-}
-
-// API functions for Knowledge Graph operations
-async function createKGEntity(nodeData) {
-    const response = await fetch('/api/kg/entity', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            name: nodeData.label,
-            entityType: nodeData.type,
-            observations: []
-        })
-    });
-    
-    if (!response.ok) {
-        throw new Error('Failed to create entity');
-    }
-}
-
-async function updateKGEntity(oldName, nodeData) {
-    const response = await fetch('/api/kg/entity', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            oldName,
-            newName: nodeData.label,
-            entityType: nodeData.type
-        })
-    });
-    
-    if (!response.ok) {
-        throw new Error('Failed to update entity');
-    }
-}
-
-async function deleteKGEntity(nodeId) {
-    const response = await fetch(`/api/kg/entity/${nodeId}`, {
-        method: 'DELETE'
-    });
-    
-    if (!response.ok) {
-        throw new Error('Failed to delete entity');
-    }
-}
-
-async function createKGRelation(edgeData) {
-    const response = await fetch('/api/kg/relation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            from: edgeData.from,
-            to: edgeData.to,
-            relationType: edgeData.label
-        })
-    });
-    
-    if (!response.ok) {
-        throw new Error('Failed to create relation');
-    }
-}
-
-async function deleteKGRelation(edgeId) {
-    const response = await fetch(`/api/kg/relation/${edgeId}`, {
-        method: 'DELETE'
-    });
-    
-    if (!response.ok) {
-        throw new Error('Failed to delete relation');
-    }
-}
-
-// Initialize when the page loads
-document.addEventListener('DOMContentLoaded', initKGVisualizer); 
+}); 

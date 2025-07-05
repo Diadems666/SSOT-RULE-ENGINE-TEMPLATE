@@ -1,0 +1,22 @@
+# System Memory State
+
+ENTITIES:
+- RuleEngine:
+    type: core_component
+    status: active
+    version: 1.0.0
+
+- SSOTSystem:
+    type: core_component
+    status: active
+    version: 1.0.0
+
+- CommsLayer:
+    type: core_component
+    status: active
+    version: 1.0.0
+
+RELATIONSHIPS:
+- RuleEngine -> SSOTSystem: uses_state
+- RuleEngine -> CommsLayer: sends_events
+- SSOTSystem -> CommsLayer: broadcasts_updates 
