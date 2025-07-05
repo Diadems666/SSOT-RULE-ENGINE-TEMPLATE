@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSOT Rule Engine Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kg-visualizer.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <h2>SSOT Rule Engine</h2>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#rule-engine">Rule Engine</a></li>
+                    <li><a href="#knowledge-graph">Knowledge Graph</a></li>
+                    <li><a href="#analytics">Analytics</a></li>
+                    <li><a href="#ai-tools">AI Tools</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <header class="header">
+            <div class="project-info">
+                <h1>Project Dashboard</h1>
+                <span class="project-health">Health Score: <span id="health-score">85</span></span>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" id="ai-analyze-codebase">AI Analysis</button>
+                <button class="btn btn-secondary" onclick="showSettings()">Settings</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Rule Engine Section with AI Integration -->
+            <section id="rule-engine" class="rule-engine">
+                <h2>Rule Generator</h2>
+                <div class="rule-form">
+                    <input type="text" id="rule-name" placeholder="Rule Name">
+                    <select id="rule-template">
+                        <!-- Templates populated by JavaScript -->
+                    </select>
+                    <select id="rule-language">
+                        <option value="python">Python</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="markdown">Markdown</option>
+                    </select>
+                    <textarea id="rule-description" placeholder="Rule Description" rows="3"></textarea>
+                    <div class="button-group">
+                        <button id="generate-rule" class="btn btn-primary">Generate Rule</button>
+                        <button id="ai-generate-rule" class="btn btn-primary">AI-Assisted Generation</button>
+                    </div>
+                </div>
+
+                <div class="rule-preview" id="rule-preview">
+                    <!-- Generated rule preview -->
+                </div>
+
+                <div class="documentation-preview" id="documentation-preview">
+                    <!-- Generated documentation preview -->
+                </div>
+
+                <h3>Generated Rules</h3>
+                <div class="rule-list" id="rule-list">
+                    <!-- Rule items populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Knowledge Graph Section with AI Enhancement -->
+            <section id="knowledge-graph" class="knowledge-graph">
+                <h2>Knowledge Graph</h2>
+                <div class="kg-controls">
+                    <button id="ai-enhance-memory" class="btn btn-primary">AI Enhance</button>
+                    <button id="refresh-graph" class="btn btn-secondary">Refresh</button>
+                </div>
+                <div id="graph-container"></div>
+                
+                <!-- Node Form -->
+                <div id="node-form" class="node-form">
+                    <h3 id="node-operation">Add Node</h3>
+                    <input type="hidden" id="node-id">
+                    <input type="text" id="node-label" placeholder="Node Label">
+                    <select id="node-type">
+                        <option value="file">File</option>
+                        <option value="function">Function</option>
+                        <option value="class">Class</option>
+                        <option value="module">Module</option>
+                        <option value="package">Package</option>
+                    </select>
+                    <button id="saveButton" class="btn btn-primary">Save</button>
+                    <button onclick="document.getElementById('node-form').style.display='none'" class="btn btn-secondary">Cancel</button>
+                </div>
+
+                <!-- Node Details Panel -->
+                <div id="node-details" class="node-details">
+                    <h3>Node Details</h3>
+                    <div class="details-content">
+                        <!-- Node details populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Tools Section -->
+            <section id="ai-tools" class="ai-tools">
+                <h2>AI Tools</h2>
+                
+                <!-- Codebase Analysis -->
+                <div class="analysis-container" id="analysis-container">
+                    <h3>Codebase Analysis</h3>
+                    <div class="analysis-results">
+                        <!-- Analysis results populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Documentation Generator -->
+                <div class="documentation-container" id="documentation-container">
+                    <h3>Documentation</h3>
+                    <div class="docs-controls">
+                        <button id="ai-generate-docs" class="btn btn-primary">Generate Documentation</button>
+                    </div>
+                    <div class="docs-toc" id="docs-toc">
+                        <!-- Table of contents populated by JavaScript -->
+                    </div>
+                    <div class="docs-content">
+                        <!-- Documentation content populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics">
+                <h2>Analytics</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Active Rules</h3>
+                        <div class="metric-value" id="active-rules">12</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Rule Effectiveness</h3>
+                        <div class="metric-value" id="rule-effectiveness">87%</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Knowledge Graph Nodes</h3>
+                        <div class="metric-value" id="kg-nodes">156</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>AI Suggestions</h3>
+                        <div class="metric-value" id="ai-suggestions">8</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg-visualizer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ai-integration.js') }}"></script>
+    <script>
+        // Update the last update timestamp
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html> 

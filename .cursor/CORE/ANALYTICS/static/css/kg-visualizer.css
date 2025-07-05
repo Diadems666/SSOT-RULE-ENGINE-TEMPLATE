@@ -1,0 +1,235 @@
+/* Knowledge Graph Container */
+.kg-section {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    height: 600px;
+    margin-top: 30px;
+}
+
+#kg-visualizer {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+/* Node Details Sidebar */
+.kg-sidebar {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+#node-details {
+    height: 100%;
+}
+
+#node-details h3 {
+    margin: 0 0 15px 0;
+    color: var(--primary-color);
+}
+
+#node-details p {
+    margin: 0 0 15px 0;
+}
+
+.node-observations,
+.node-relations {
+    margin-top: 20px;
+}
+
+.node-observations h4,
+.node-relations h4 {
+    color: var(--secondary-color);
+    margin: 0 0 10px 0;
+}
+
+.node-observations ul,
+.node-relations ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.node-observations li,
+.node-relations li {
+    padding: 8px;
+    background: rgba(74, 144, 226, 0.1);
+    border-radius: var(--border-radius);
+    margin-bottom: 8px;
+}
+
+.node-relations li strong {
+    color: var(--primary-color);
+    margin: 0 5px;
+}
+
+/* Node/Edge Edit Modals */
+.kg-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.kg-modal-content {
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    width: 400px;
+    max-width: 90%;
+}
+
+.kg-modal h3 {
+    margin: 0 0 20px 0;
+    color: var(--primary-color);
+}
+
+.kg-form-group {
+    margin-bottom: 15px;
+}
+
+.kg-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.kg-form-group input,
+.kg-form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+}
+
+.kg-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.kg-modal-actions button {
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all var(--transition-speed);
+}
+
+.kg-modal-actions .save-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.kg-modal-actions .save-btn:hover {
+    background: darken(var(--primary-color), 10%);
+}
+
+.kg-modal-actions .cancel-btn {
+    background: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.kg-modal-actions .cancel-btn:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+/* KG Controls */
+.kg-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.kg-controls button {
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.kg-controls .refresh-btn {
+    background: var(--success-color);
+    color: white;
+    border: none;
+}
+
+.kg-controls .refresh-btn:hover {
+    background: darken(var(--success-color), 10%);
+}
+
+.kg-controls .layout-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.kg-controls .layout-btn:hover {
+    background: darken(var(--primary-color), 10%);
+}
+
+/* Legend */
+.kg-legend {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--border-radius);
+}
+
+.kg-legend h4 {
+    margin: 0 0 10px 0;
+    color: var(--secondary-color);
+}
+
+.kg-legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.kg-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.kg-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .kg-section {
+        grid-template-columns: 1fr;
+    }
+    
+    #kg-visualizer {
+        height: 400px;
+    }
+    
+    .kg-sidebar {
+        height: 300px;
+    }
+} 

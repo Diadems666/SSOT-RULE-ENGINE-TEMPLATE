@@ -1,197 +1,228 @@
-# SSOT-RULE-ENGINE-TEMPLATE Deployment Package
+# SSOT Rule Engine Template
 
-This directory contains the complete template for deploying the SSOT-RULE-ENGINE system to any new or existing project.
+A comprehensive template for integrating the SSOT Rule Engine system into new or existing projects. This template provides a complete analytics dashboard, Knowledge Graph visualization, and rule management interface.
 
-## 🚀 Quick Start
+## Features
 
-1. **Copy the `.cursor` folder** from this DEPLOY directory to your project root
-2. **Copy the `launch-dashboard.py`** script to your project root
-3. **Run the initialization trigger** in your project:
+### Analytics Dashboard
+- Real-time project health monitoring (0-100 scoring)
+- Interactive visualizations and metrics
+- System status indicators
+- Performance tracking
+- Error monitoring
+
+### Knowledge Graph Visualization
+- Interactive graph visualization using vis.js
+- Entity and relationship management
+- Type-based color coding
+- Advanced search and filtering
+- Graph analytics tools
+- MCP persistence integration
+
+### Rule Engine Interface
+- Visual rule management
+- Rule template system
+- Rule effectiveness tracking
+- Custom rule creation
+- Rule impact analysis
+
+### SSOT System
+- Centralized project state management
+- History tracking
+- Context awareness
+- Progress monitoring
+- Fact management
+
+### MCP Integration
+- Knowledge Graph server
+- Sequential Thinking server
+- Filesystem server
+- Memory persistence
+- Real-time updates
+
+## Requirements
+
+- Python 3.8+
+- Node.js 14+
+- Git
+- PowerShell (Windows) or Bash (Unix)
+
+## Quick Start
+
+### Windows
+```powershell
+# Clone the template
+git clone https://github.com/your-org/ssot-rule-engine-template.git
+
+# Run deployment script
+cd ssot-rule-engine-template
+.\DEPLOY\deploy.ps1 "C:\path\to\your\project"
+```
+
+### Unix/Linux/macOS
+```bash
+# Clone the template
+git clone https://github.com/your-org/ssot-rule-engine-template.git
+
+# Run deployment script
+cd ssot-rule-engine-template
+./DEPLOY/deploy.sh /path/to/your/project
+```
+
+## Manual Installation
+
+1. Copy the template structure to your project:
+   ```
+   .cursor/
+     CORE/
+       RULE-ENGINE/
+       ANALYTICS/
+       SSOT/
+       MCP/
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r DEPLOY/requirements.txt
+   ```
+
+3. Configure MCP:
+   - Copy `mcp.json` to your project root
+   - Update settings as needed
+
+4. Initialize the system:
    ```
    !!-ADD-.ENGINE-!!
    ```
 
-## 📁 What's Included
+5. Install MCP servers:
+   ```
+   !!-INSTALL-MCP-!!
+   ```
 
-```
-DEPLOY/
-├── .cursor/
-│   ├── CORE/
-│   │   ├── SSOT/
-│   │   │   └── .ENGINE           # Core workflow orchestrator
-│   │   ├── MCP/                  # Model Context Protocol servers
-│   │   │   ├── knowledge-graph/  # Entity-relationship modeling
-│   │   │   ├── sequential-thinking/  # Multi-step reasoning
-│   │   │   └── filesystem/       # Enhanced file operations
-│   │   ├── ANALYTICS/            # Project health monitoring
-│   │   │   ├── analytics_engine.py
-│   │   │   ├── dashboard.py
-│   │   │   ├── cli.py
-│   │   │   └── startup.py
-│   │   ├── RULE-ENGINE/          # Staged rules directory
-│   │   ├── MEMORY/              # Persistent storage
-│   │   └── PROMPTS/             # Prompt templates
-│   ├── rules/
-│   │   └── 999-mdc-format.mdc   # Rule format specification
-│   ├── mcp.json                 # MCP server configuration
-│   └── USER-RULES.md           # User rules template
-├── launch-dashboard.py          # Quick dashboard launcher
-└── README.md                   # This file
-```
+6. Build Knowledge Graph:
+   ```
+   !!-BUILD-KG-!!
+   ```
 
-## 🔧 Installation Process
+## Usage
 
-### Step 1: Copy Template Files
-Copy the entire `.cursor` folder and `launch-dashboard.py` to your project root:
-
+### Launch Dashboard
 ```bash
-# Copy the template structure
-cp -r DEPLOY/.cursor /path/to/your/project/
-cp DEPLOY/launch-dashboard.py /path/to/your/project/
+python launch-dashboard.py
 ```
+Access at http://localhost:5000
 
-### Step 2: Initialize the System
-Navigate to your project and run the ADD trigger:
+### Core Commands
+- `!!-INIT-.ENGINE-!!` - Initialize new project
+- `!!-ADD-.ENGINE-!!` - Add to existing project
+- `!!-INSTALL-MCP-!!` - Install MCP servers
+- `!!-BUILD-KG-!!` - Build Knowledge Graph
+- `!!-LAUNCH-DASHBOARD-!!` - Launch analytics
+- `!!-ANALYZE-PROJECT-!!` - Run analysis
+- `!!-VIEW-DASHBOARD-!!` - Open dashboard
+- `!!-HEALTH-CHECK-!!` - Quick health check
 
-```
-!!-ADD-.ENGINE-!!
-```
-
-This will:
-- ✅ Analyze your existing codebase
-- ✅ Populate SSOT state files
-- ✅ Install MCP servers
-- ✅ Build Knowledge Graph
-- ✅ Launch analytics dashboard
-
-### Step 3: Install Dependencies (if needed)
-If MCP servers aren't installed, run:
+## Directory Structure
 
 ```
-!!-INSTALL-MCP-!!
+.cursor/
+  CORE/
+    RULE-ENGINE/           # Rule engine components
+      rule_generator.py
+      engine_integration.py
+      templates/
+      config.json
+    ANALYTICS/             # Dashboard components
+      static/
+        css/
+          dashboard.css
+          kg-visualizer.css
+        js/
+          dashboard.js
+          kg-visualizer.js
+      templates/
+        dashboard.html
+      api/
+        kg_routes.py
+      services/
+        kg_service.py
+      config.json
+    SSOT/                  # SSOT system files
+      .ENGINE
+      .INIT
+      .HISTORY
+      .CONTEXT
+      .FACTS
+      .MEMORY
+      .PROGRESS
+    MCP/                   # MCP server files
 ```
 
-### Step 4: Build Knowledge Graph
-To populate the Knowledge Graph with your project data:
+## Configuration
 
-```
-!!-BUILD-KG-!!
-```
+### MCP Configuration
+Edit `mcp.json` to configure:
+- Server endpoints
+- WebSocket settings
+- Memory persistence
+- Client options
 
-## 🎯 Available Triggers
+### Rule Engine Configuration
+Edit `.cursor/CORE/RULE-ENGINE/config.json` to set:
+- Rule templates
+- Generation settings
+- Integration options
+- Language support
 
-| Trigger | Purpose |
-|---------|---------|
-| `!!-ADD-.ENGINE-!!` | Add SSOT system to existing project |
-| `!!-INSTALL-MCP-!!` | Install MCP servers |
-| `!!-BUILD-KG-!!` | Build Knowledge Graph |
-| `!!-LAUNCH-DASHBOARD-!!` | Launch analytics dashboard |
-| `!!-ANALYZE-PROJECT-!!` | Run comprehensive analysis |
-| `!!-VIEW-DASHBOARD-!!` | Open dashboard in browser |
-| `!!-HEALTH-CHECK-!!` | Quick health assessment |
+### Analytics Configuration
+Edit `.cursor/CORE/ANALYTICS/config.json` to configure:
+- Dashboard settings
+- Visualization options
+- Metrics collection
+- Update intervals
 
-## 📊 Analytics Dashboard
+## Development
 
-The system includes a comprehensive analytics dashboard that provides:
+### Adding New Rules
+1. Create rule template in `.cursor/CORE/RULE-ENGINE/templates/`
+2. Update rule configuration
+3. Generate rules using interface
+4. Test and validate
 
-- **Project Health Score** (0-100)
-- **SSOT System Status**
-- **MCP Server Performance**
-- **Knowledge Graph Metrics**
-- **Rule Engine Effectiveness**
-- **Interactive Rule Management**
+### Customizing Dashboard
+1. Modify templates in `.cursor/CORE/ANALYTICS/templates/`
+2. Update styles in `static/css/`
+3. Extend functionality in `static/js/`
+4. Add new API routes as needed
 
-Access via: `http://localhost:8080`
+### Extending Knowledge Graph
+1. Add new entity types
+2. Define relationships
+3. Create visualization styles
+4. Implement search/filter options
 
-## 🧠 Core Components
+## Troubleshooting
 
-### SSOT (Single Source of Truth) System
-- **Purpose**: Centralized project state management
-- **Files**: `.ENGINE`, `.INIT`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.HISTORY`, `.CONTINUE`, `.PROGRESS`
-- **Function**: Workflow orchestration and state persistence
+See `DEPLOY/DEPLOYMENT_VERIFICATION.md` for:
+- Common issues
+- Verification steps
+- Health checks
+- Support resources
 
-### MCP (Model Context Protocol) Servers
-- **knowledge-graph**: Entity-relationship project modeling
-- **sequential-thinking**: Multi-step reasoning and problem solving
-- **filesystem**: Enhanced file operations and analysis
+## Contributing
 
-### Analytics Engine
-- **Real-time monitoring**: Project health metrics
-- **Intelligent recommendations**: Development optimization
-- **Visual dashboard**: Interactive charts and status indicators
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Submit pull request
 
-### Rule Engine
-- **Context-aware rules**: Behavior modification based on file patterns
-- **Visual management**: Web-based rule editing interface
-- **Effectiveness tracking**: Monitor rule impact on development
+## License
 
-## 🔒 System Requirements
+MIT License - see LICENSE file
 
-- **Python 3.8+** (for analytics engine)
-- **Node.js 18+** (for MCP servers)
-- **npm** (for MCP dependencies)
-- **Git** (for version control integration)
+## Support
 
-## 📝 Template Customization
-
-### Adding Custom MCP Servers
-1. Create new server directory in `.cursor/CORE/MCP/`
-2. Add server configuration to `mcp.json`
-3. Run `!!-INSTALL-MCP-!!` to install dependencies
-
-### Custom Analytics
-- Modify `analytics_engine.py` for custom metrics
-- Update `dashboard.py` for custom visualizations
-- Add custom rules in `.cursor/CORE/RULE-ENGINE/`
-
-### Rule Development
-- Create `.mdc` files in `.cursor/CORE/RULE-ENGINE/`
-- Use the dashboard's Rule Engine interface
-- Move tested rules to `.cursor/rules/` for activation
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **MCP Servers Not Installing**
-   - Check Node.js version (18+)
-   - Verify npm is available
-   - Run `!!-INSTALL-MCP-!!` manually
-
-2. **Dashboard Not Loading**
-   - Check if Python 3.8+ is installed
-   - Verify port 8080 is available
-   - Run `python launch-dashboard.py` manually
-
-3. **Knowledge Graph Empty**
-   - Run `!!-BUILD-KG-!!` to populate
-   - Check MCP servers are running
-   - Verify project has analyzable content
-
-### Getting Help
-- Check `.cursor/CORE/SSOT/.HISTORY` for system events
-- Run `!!-HEALTH-CHECK-!!` for quick diagnostics
-- Use `!!-ANALYZE-PROJECT-!!` for comprehensive report
-
-## 🎉 Success Indicators
-
-After successful deployment, you should see:
-- ✅ Analytics dashboard running on http://localhost:8080
-- ✅ SSOT files populated in `.cursor/CORE/SSOT/`
-- ✅ MCP servers installed and configured
-- ✅ Knowledge Graph populated with project entities
-- ✅ Project health score > 60
-
-## 🔗 Next Steps
-
-1. **Explore the Dashboard**: Visit http://localhost:8080
-2. **Review SSOT State**: Check `.cursor/CORE/SSOT/` files
-3. **Test Knowledge Graph**: Use search and entity exploration
-4. **Create Custom Rules**: Use the Rule Engine interface
-5. **Monitor Health**: Set up regular health checks
-
----
-
-**Template Version**: 1.0.0  
-**Last Updated**: 2025-01-27  
-**Compatibility**: Cursor AI IDE with MCP support 
+- Documentation: `.cursor/CORE/DOCS/`
+- Issues: GitHub repository
+- Community: Discord server 

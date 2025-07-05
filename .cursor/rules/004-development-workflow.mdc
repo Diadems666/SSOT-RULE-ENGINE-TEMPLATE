@@ -1,0 +1,92 @@
+---
+alwaysApply: true
+---
+# Project Development Workflow Guidelines
+
+## Development Lifecycle
+1. Planning
+   - Review requirements
+   - Create task breakdown
+   - Set priorities
+   - Consider dependencies
+   - Document decisions
+
+2. Implementation
+   - Follow coding standards
+   - Write tests first
+   - Implement features
+   - Document changes
+   - Update SSOT files
+
+3. Testing
+   - Run unit tests
+   - Perform integration testing
+   - Check edge cases
+   - Validate requirements
+   - Update test documentation
+
+4. Review
+   - Code review
+   - Documentation review
+   - Test coverage review
+   - Performance review
+   - Security review
+
+## Project Structure
+- Maintain consistent directory structure
+- Follow naming conventions
+- Organize components logically
+- Keep related files together
+- Document structure changes
+
+## Code Quality
+1. Standards
+   - Follow style guide
+   - Use consistent patterns
+   - Write clear comments
+   - Handle errors properly
+   - Optimize performance
+
+2. Testing
+   - Write comprehensive tests
+   - Cover edge cases
+   - Test error handling
+   - Measure coverage
+   - Document test cases
+
+## Documentation
+1. Code Documentation
+   - Document public APIs
+   - Explain complex logic
+   - Include examples
+   - Keep docs updated
+   - Use clear language
+
+2. Project Documentation
+   - Maintain README
+   - Update CHANGELOG
+   - Document architecture
+   - Track decisions
+   - Record dependencies
+
+## Version Control
+- Write clear commit messages
+- Use feature branches
+- Follow branching strategy
+- Review before merge
+- Tag releases properly
+
+## Continuous Integration
+- Automate builds
+- Run test suites
+- Check code quality
+- Verify documentation
+- Deploy safely
+
+## References
+@.cursor/CORE/SSOT/.ENGINE
+@.cursor/CORE/MCP/mcp.json
+description:
+globs:
+alwaysApply: false
+---

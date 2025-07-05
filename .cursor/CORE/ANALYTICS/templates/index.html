@@ -1,0 +1,38 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SSOT Rule Engine Dashboard</title>
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+    <body>
+        <div class="dashboard">
+            <header>
+                <h1>SSOT Rule Engine Dashboard</h1>
+            </header>
+            
+            <main>
+                <section class="health-metrics">
+                    <h2>Project Health</h2>
+                    <div id="health-scores"></div>
+                </section>
+                
+                <section class="rule-engine">
+                    <h2>Rule Engine</h2>
+                    <div class="triggers">
+                        <h3>Available Triggers</h3>
+                        <div id="trigger-list"></div>
+                    </div>
+                    <div class="rule-stats">
+                        <h3>Rule Statistics</h3>
+                        <div id="rule-stats"></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script src="/static/js/dashboard.js"></script>
+    </body>
+    </html>
+    

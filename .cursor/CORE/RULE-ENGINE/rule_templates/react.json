@@ -1,0 +1,23 @@
+[
+  {
+    "name": "React Component Structure",
+    "description": "Guidelines for React component organization and best practices",
+    "globs": ["**/*.tsx", "**/*.jsx"],
+    "alwaysApply": true,
+    "content": "# React Component Guidelines\n\n## Component Structure\n- Use functional components\n- Implement proper prop types\n- Follow component composition\n- Keep components focused\n\n## State Management\n- Use hooks appropriately\n- Implement context when needed\n- Avoid prop drilling\n- Manage side effects\n\n## Performance\n- Use React.memo wisely\n- Implement useMemo/useCallback\n- Optimize re-renders\n- Lazy load components\n\n## Testing\n- Write component tests\n- Test user interactions\n- Mock external dependencies\n- Test error states"
+  },
+  {
+    "name": "TypeScript Best Practices",
+    "description": "TypeScript coding standards and type safety guidelines",
+    "globs": ["**/*.ts", "**/*.tsx"],
+    "alwaysApply": true,
+    "content": "# TypeScript Best Practices\n\n## Type Safety\n- Use strict type checking\n- Avoid any type\n- Define proper interfaces\n- Use type guards\n\n## Code Organization\n- Organize types/interfaces\n- Use barrel exports\n- Implement proper modules\n- Follow DRY principle\n\n## Error Handling\n- Define error types\n- Use type predicates\n- Handle null/undefined\n- Implement error boundaries"
+  },
+  {
+    "name": "React Testing",
+    "description": "React testing standards and practices",
+    "globs": ["**/tests/**/*.tsx", "**/tests/**/*.ts"],
+    "alwaysApply": true,
+    "content": "# React Testing Guidelines\n\n## Test Structure\n- Use React Testing Library\n- Follow user-centric testing\n- Test accessibility\n- Mock API calls\n\n## Component Testing\n- Test rendering\n- Test user interactions\n- Test error states\n- Test loading states\n\n## Integration Testing\n- Test component integration\n- Test routing\n- Test state management\n- Test form submissions"
+  }
+] 

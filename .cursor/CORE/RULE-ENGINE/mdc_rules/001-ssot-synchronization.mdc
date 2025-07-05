@@ -1,0 +1,51 @@
+# SSOT System Synchronization Rules
+
+## Core Principles
+- All state changes must be reflected in SSOT files
+- Maintain consistency between Knowledge Graph and SSOT summaries
+- Follow strict update procedures for system modifications
+
+## File Structure
+- Core SSOT files must be maintained in `.cursor/CORE/SSOT/`:
+  - `.INIT`: Project initialization state
+  - `.HISTORY`: Chronological record of significant actions
+  - `.CONTINUE`: Next focus/task tracking
+  - `.CONTEXT`: High-level system overview
+  - `.FACTS`: Key decisions and constraints
+  - `.MEMORY`: Structured entity/relationship summaries
+  - `.PROGRESS`: Task completion tracking
+  - `.ENGINE`: Core workflow instructions
+
+## Update Procedures
+1. After any significant action:
+   - Update `.HISTORY` with timestamp and description
+   - Sync relevant SSOT files
+   - Update Knowledge Graph if applicable
+
+2. When modifying system components:
+   - Document changes in `.CONTEXT`
+   - Update constraints in `.FACTS`
+   - Reflect dependencies in `.MEMORY`
+
+3. For workflow changes:
+   - Update `.ENGINE` with new procedures
+   - Modify relevant MCP server configurations
+   - Update dashboard components if needed
+
+## Knowledge Graph Integration
+- Maintain bidirectional sync between SSOT and Knowledge Graph
+- Use MCP API calls for graph updates
+- Ensure entity relationships reflect system state
+
+## Error Handling
+- Log all synchronization errors
+- Maintain system state consistency
+- Implement recovery procedures for sync failures
+
+## References
+@.cursor/CORE/SSOT/.ENGINE
+@.cursor/CORE/MCP/mcp.json
+description:
+globs:
+alwaysApply: false
+---

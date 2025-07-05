@@ -1,0 +1,3 @@
+"""
+SSOT Core package
+""" 

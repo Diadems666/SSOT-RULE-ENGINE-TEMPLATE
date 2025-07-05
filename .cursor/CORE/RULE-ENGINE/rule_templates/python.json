@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Python Code Style",
+    "description": "Python coding standards and best practices",
+    "globs": ["**/*.py"],
+    "alwaysApply": true,
+    "content": "# Python Code Style Guidelines\n\n## Code Structure\n- Follow PEP 8 style guide\n- Use type hints\n- Document functions and classes\n- Handle exceptions properly\n\n## Best Practices\n- Use virtual environments\n- Write unit tests\n- Use docstrings\n- Follow SOLID principles\n\n## Project Organization\n- Use proper package structure\n- Separate concerns\n- Maintain requirements.txt\n- Include setup.py\n\n## Testing\n- Use pytest\n- Write comprehensive tests\n- Mock external dependencies\n- Measure coverage"
+  },
+  {
+    "name": "Python MCP Integration",
+    "description": "Guidelines for Python MCP server integration",
+    "globs": ["**/mcp/**/*.py"],
+    "alwaysApply": true,
+    "content": "# Python MCP Integration Guidelines\n\n## Server Implementation\n- Use async/await\n- Handle errors properly\n- Log operations\n- Validate inputs\n\n## API Design\n- Use type hints\n- Document endpoints\n- Version APIs\n- Handle rate limiting\n\n## Security\n- Validate inputs\n- Sanitize outputs\n- Use proper authentication\n- Follow least privilege"
+  },
+  {
+    "name": "Python Testing",
+    "description": "Python testing standards and practices",
+    "globs": ["**/tests/**/*.py"],
+    "alwaysApply": true,
+    "content": "# Python Testing Guidelines\n\n## Test Structure\n- Use pytest fixtures\n- Organize test files\n- Name tests clearly\n- Use parametrize\n\n## Coverage\n- Aim for high coverage\n- Test edge cases\n- Mock external services\n- Use coverage reports\n\n## Best Practices\n- Write readable tests\n- Test one thing\n- Use proper assertions\n- Clean up resources"
+  }
+] 

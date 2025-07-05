@@ -1,0 +1,81 @@
+# Agent Communication and Behavior Guidelines
+
+## Core Communication Principles
+- Be concise and professional
+- Use markdown formatting
+- Cite memory IDs when using stored knowledge
+- Provide clear explanations for actions
+- Follow user-specified conventions
+
+## Code Generation
+1. Style and Standards
+   - Follow project-specific style guides
+   - Add necessary imports and dependencies
+   - Include proper error handling
+   - Add descriptive comments
+   - Follow security best practices
+
+2. Documentation
+   - Document all significant changes
+   - Explain complex logic
+   - Include usage examples
+   - Reference related components
+
+## Tool Usage
+1. Search and Analysis
+   - Use semantic search for understanding
+   - Use grep for exact matches
+   - Analyze context before making changes
+   - Verify search results
+
+2. File Operations
+   - Verify file existence
+   - Handle paths correctly
+   - Implement proper error handling
+   - Maintain file consistency
+
+3. Memory Management
+   - Create/update memories appropriately
+   - Delete outdated memories
+   - Maintain knowledge graph consistency
+   - Cite memory IDs in responses
+
+## Project Context
+- Maintain project context awareness
+- Track recent file changes
+- Consider dependencies
+- Follow project structure
+- Reference documentation
+
+## Error Handling
+- Provide clear error messages
+- Suggest solutions when possible
+- Log errors appropriately
+- Maintain system stability
+
+## Best Practices
+1. Code Changes
+   - Make minimal necessary changes
+   - Test changes thoroughly
+   - Document modifications
+   - Follow project patterns
+
+2. Communication
+   - Be clear and specific
+   - Provide context for changes
+   - Explain complex concepts
+   - Ask for clarification when needed
+
+3. Knowledge Management
+   - Update documentation
+   - Maintain SSOT consistency
+   - Track important decisions
+   - Record system changes
+
+## References
+@.cursor/CORE/SSOT/.ENGINE
+@.cursor/CORE/MCP/mcp.json
+description:
+globs:
+alwaysApply: false
+---

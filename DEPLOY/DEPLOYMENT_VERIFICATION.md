@@ -1,138 +1,151 @@
-# SSOT-RULE-ENGINE-TEMPLATE Deployment Verification
+# SSOT Rule Engine Deployment Verification Guide
 
-Use this checklist to verify successful deployment to a target project.
+This guide helps verify that your SSOT Rule Engine deployment is working correctly.
 
-## ✅ Pre-Deployment Checklist
+## Prerequisites Check
 
-- [ ] Target project directory exists
-- [ ] You have write permissions to the target directory
-- [ ] Python 3.8+ is installed and accessible
-- [ ] Node.js 18+ is installed and accessible
-- [ ] npm is available in PATH
+1. Python Environment
+```bash
+python --version  # Should be 3.8+
+pip --version
+```
 
-## ✅ Deployment Process Checklist
+2. Node.js Environment
+```bash
+node --version  # Should be 14+
+npm --version
+```
 
-### Method 1: Using Deployment Scripts
-- [ ] Ran `deploy.ps1` (Windows) or `deploy.sh` (Unix/Linux/macOS)
-- [ ] No errors during file copying
-- [ ] All template files copied successfully
+## Directory Structure Verification
 
-### Method 2: Manual Deployment
-- [ ] Copied `.cursor/` directory to target project root
-- [ ] Copied `launch-dashboard.py` to target project root
-- [ ] Copied `.gitignore` to target project root (if not existing)
+Check that the following directories exist and contain the appropriate files:
 
-## ✅ Post-Deployment Verification
+```
+.cursor/
+  CORE/
+    RULE-ENGINE/
+      rule_generator.py
+      engine_integration.py
+      templates/
+      config.json
+    ANALYTICS/
+      static/
+        css/
+          dashboard.css
+          kg-visualizer.css
+        js/
+          dashboard.js
+          kg-visualizer.js
+      templates/
+        dashboard.html
+      api/
+        kg_routes.py
+      services/
+        kg_service.py
+      config.json
+    SSOT/
+      .ENGINE
+      .INIT
+      .HISTORY
+      .CONTEXT
+      .FACTS
+      .MEMORY
+      .PROGRESS
+    MCP/
+      [MCP server files]
+```
 
-### Core Structure
-- [ ] `.cursor/CORE/SSOT/.ENGINE` exists and is readable
-- [ ] `.cursor/CORE/MCP/` contains three server directories
-- [ ] `.cursor/CORE/ANALYTICS/` contains analytics files
-- [ ] `.cursor/mcp.json` exists and is properly formatted
-- [ ] `launch-dashboard.py` exists in project root
+## Configuration Verification
 
-### MCP Server Structure
-- [ ] `knowledge-graph/` directory exists with source files
-- [ ] `sequentialthinking/` directory exists with source files
-- [ ] `filesystem/` directory exists with source files
-- [ ] No `node_modules/` directories in template
-- [ ] No `dist/` directories in template
-- [ ] No `package-lock.json` files in template
+1. Check MCP Configuration
+```bash
+cat mcp.json  # Should contain valid JSON with MCP settings
+```
 
-### Analytics System
-- [ ] `analytics_engine.py` exists and is readable
-- [ ] `dashboard.py` exists and is readable
-- [ ] `startup.py` exists and is readable
-- [ ] `cli.py` exists and is readable
-- [ ] `USER-RULES-TEMPLATE.md` exists
+2. Check Rule Engine Configuration
+```bash
+cat .cursor/CORE/RULE-ENGINE/config.json  # Should contain valid JSON
+```
 
-## ✅ System Initialization
+3. Check Analytics Configuration
+```bash
+cat .cursor/CORE/ANALYTICS/config.json  # Should contain valid JSON
+```
 
-### Trigger Execution
-- [ ] Navigate to target project directory
-- [ ] Run `!!-ADD-.ENGINE-!!` in Cursor AI
-- [ ] System acknowledges trigger and begins analysis
-- [ ] SSOT files are populated automatically
-- [ ] Analytics dashboard launches
+## Functionality Tests
 
-### Expected Outcomes
-- [ ] Analytics dashboard accessible at `http://localhost:8080`
-- [ ] SSOT files populated in `.cursor/CORE/SSOT/`
-- [ ] Project health score generated
-- [ ] MCP servers ready for installation
-- [ ] Knowledge Graph ready for building
+1. Dashboard Access
+   - Run `python launch-dashboard.py`
+   - Access http://localhost:5000
+   - Verify dashboard loads without errors
+   - Check all dashboard components are visible
 
-## ✅ Full System Validation
+2. Knowledge Graph Visualization
+   - Click "Knowledge Graph" tab in dashboard
+   - Verify graph visualization loads
+   - Test node/edge creation
+   - Test search functionality
+   - Test filtering options
 
-### MCP Installation
-- [ ] Run `!!-INSTALL-MCP-!!` trigger
-- [ ] npm install completes for all three servers
-- [ ] No installation errors reported
-- [ ] Server dependencies installed successfully
+3. Rule Engine
+   - Check rule generation works
+   - Verify rule templates are accessible
+   - Test rule creation through interface
 
-### Knowledge Graph Building
-- [ ] Run `!!-BUILD-KG-!!` trigger
-- [ ] Knowledge Graph populated with project entities
-- [ ] Relationships established between components
-- [ ] Graph accessible via API
+4. SSOT System
+   - Verify .HISTORY shows deployment entry
+   - Check .INIT contains valid configuration
+   - Test project context tracking
 
-### Dashboard Functionality
-- [ ] Dashboard loads without errors
-- [ ] Project health score displays correctly
-- [ ] Analytics data populates
-- [ ] Rule Engine interface accessible
-- [ ] SSOT system status visible
+5. MCP Integration
+   - Verify MCP servers are running
+   - Test Knowledge Graph persistence
+   - Check memory operations work
 
-## ✅ Troubleshooting Common Issues
+## Common Issues & Solutions
 
-### Dashboard Not Loading
-- [ ] Check Python installation and version
-- [ ] Verify port 8080 is available
-- [ ] Run `python launch-dashboard.py` manually
-- [ ] Check for Unicode encoding issues on Windows
+1. Dashboard Not Loading
+   - Check Python dependencies are installed
+   - Verify port 5000 is available
+   - Check Flask server logs
 
-### MCP Installation Failures
-- [ ] Verify Node.js version (18+)
-- [ ] Check npm is in PATH
-- [ ] Verify file permissions
-- [ ] Check network connectivity for npm packages
+2. Knowledge Graph Issues
+   - Verify vis.js is loaded correctly
+   - Check browser console for errors
+   - Verify MCP connection settings
 
-### SSOT System Issues
-- [ ] Verify `.ENGINE` file is readable
-- [ ] Check directory permissions
-- [ ] Ensure all required directories exist
-- [ ] Validate JSON configuration files
+3. Rule Engine Problems
+   - Check Python path includes rule_engine module
+   - Verify template directory permissions
+   - Check rule generation logs
 
-## ✅ Success Indicators
+4. MCP Connection Issues
+   - Verify MCP servers are running
+   - Check WebSocket connection
+   - Verify mcp.json configuration
 
-A successful deployment should show:
-- ✅ Analytics dashboard running on http://localhost:8080
-- ✅ Project health score > 60
-- ✅ All SSOT files populated
-- ✅ MCP servers installed and configured
-- ✅ Knowledge Graph contains project entities
-- ✅ Rule Engine interface functional
+## Health Check
 
-## 📝 Deployment Notes
+Run the built-in health check:
+```bash
+!!-HEALTH-CHECK-!!
+```
 
-**Date:** ___________
-**Target Project:** ___________
-**Deployment Method:** ___________
-**Issues Encountered:** ___________
-**Resolution:** ___________
-**Final Status:** ___________
+This will:
+- Verify all components are running
+- Check system integration
+- Report any issues found
+- Provide health score (0-100)
 
-## 🚀 Next Steps After Successful Deployment
+## Support
 
-1. **Explore the Dashboard**: Visit http://localhost:8080
-2. **Review SSOT State**: Check `.cursor/CORE/SSOT/` files
-3. **Test Knowledge Graph**: Search for project entities
-4. **Create Custom Rules**: Use the Rule Engine interface
-5. **Monitor Health**: Set up regular health checks
-6. **Customize Analytics**: Modify analytics engine as needed
+If you encounter issues:
+1. Check the logs in `.cursor/CORE/LOGS/`
+2. Review error messages in browser console
+3. Verify all dependencies are installed
+4. Check system requirements are met
 
----
-
-**Template Version:** 1.0.0  
-**Last Updated:** 2025-01-27  
-**Compatibility:** Cursor AI IDE with MCP support 
+For additional help:
+- Run `!!-ANALYZE-PROJECT-!!` for detailed diagnostics
+- Check documentation in `.cursor/CORE/DOCS/`
+- Submit issues to the project repository 

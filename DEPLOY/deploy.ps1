@@ -1,88 +1,92 @@
-# SSOT-RULE-ENGINE-TEMPLATE Deployment Script
-# PowerShell script to deploy the template to a target project
-
+# SSOT Rule Engine Deployment Script (Windows)
 param(
-    [Parameter(Mandatory=$true)]
-    [string]$TargetPath,
-    
-    [Parameter(Mandatory=$false)]
-    [switch]$Force = $false
+    [string]$targetDir = ".",
+    [switch]$force = $false
 )
 
-Write-Host "🚀 SSOT-RULE-ENGINE-TEMPLATE Deployment Script" -ForegroundColor Green
-Write-Host "===============================================" -ForegroundColor Green
+# Configuration
+$templateRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$coreDirectories = @(
+    ".cursor/CORE/RULE-ENGINE",
+    ".cursor/CORE/ANALYTICS",
+    ".cursor/CORE/SSOT",
+    ".cursor/CORE/MCP",
+    ".cursor/CORE/MEMORY",
+    ".cursor/CORE/PROMPTS"
+)
+$configFiles = @(
+    "mcp.json",
+    ".cursor/CORE/RULE-ENGINE/config.json",
+    ".cursor/CORE/ANALYTICS/config.json"
+)
 
-# Validate target path
-if (-not (Test-Path $TargetPath)) {
-    Write-Host "❌ Error: Target path does not exist: $TargetPath" -ForegroundColor Red
-    exit 1
-}
-
-# Check if target already has .cursor directory
-$targetCursorPath = Join-Path $TargetPath ".cursor"
-if ((Test-Path $targetCursorPath) -and -not $Force) {
-    Write-Host "⚠️  Warning: Target project already has .cursor directory!" -ForegroundColor Yellow
-    Write-Host "Use -Force parameter to overwrite, or choose a different target." -ForegroundColor Yellow
-    exit 1
-}
-
-Write-Host "📁 Target Project: $TargetPath" -ForegroundColor Cyan
-Write-Host "📦 Deploying SSOT-RULE-ENGINE-TEMPLATE..." -ForegroundColor Cyan
-
+# Verify Python installation
+Write-Host "Checking Python installation..."
 try {
-    # Get the script directory (where DEPLOY folder is)
-    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-    $deployDir = $scriptDir
-    
-    # Copy .cursor directory
-    Write-Host "📋 Copying .cursor directory..." -ForegroundColor Yellow
-    $sourceCursorPath = Join-Path $deployDir ".cursor"
-    
-    if (Test-Path $targetCursorPath) {
-        Remove-Item $targetCursorPath -Recurse -Force
-    }
-    
-    Copy-Item $sourceCursorPath $TargetPath -Recurse -Force
-    Write-Host "✅ .cursor directory copied successfully" -ForegroundColor Green
-    
-    # Copy launch-dashboard.py
-    Write-Host "📋 Copying launch-dashboard.py..." -ForegroundColor Yellow
-    $sourceDashboard = Join-Path $deployDir "launch-dashboard.py"
-    $targetDashboard = Join-Path $TargetPath "launch-dashboard.py"
-    
-    if (Test-Path $sourceDashboard) {
-        Copy-Item $sourceDashboard $targetDashboard -Force
-        Write-Host "✅ launch-dashboard.py copied successfully" -ForegroundColor Green
-    } else {
-        Write-Host "⚠️  Warning: launch-dashboard.py not found in template" -ForegroundColor Yellow
-    }
-    
-    # Copy .gitignore if it doesn't exist
-    $sourceGitignore = Join-Path $deployDir ".gitignore"
-    $targetGitignore = Join-Path $TargetPath ".gitignore"
-    
-    if ((Test-Path $sourceGitignore) -and -not (Test-Path $targetGitignore)) {
-        Write-Host "📋 Copying .gitignore..." -ForegroundColor Yellow
-        Copy-Item $sourceGitignore $targetGitignore -Force
-        Write-Host "✅ .gitignore copied successfully" -ForegroundColor Green
-    }
-    
-    Write-Host ""
-    Write-Host "🎉 DEPLOYMENT SUCCESSFUL!" -ForegroundColor Green
-    Write-Host "=========================" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "📍 Next Steps:" -ForegroundColor Cyan
-    Write-Host "1. Navigate to your project: cd `"$TargetPath`"" -ForegroundColor White
-    Write-Host "2. Run the initialization trigger: !!-ADD-.ENGINE-!!" -ForegroundColor White
-    Write-Host "3. Wait for the analytics dashboard to launch" -ForegroundColor White
-    Write-Host "4. Access dashboard at: http://localhost:8080" -ForegroundColor White
-    Write-Host ""
-    Write-Host "💡 For help, check the README.md or run: !!-HEALTH-CHECK-!!" -ForegroundColor Yellow
-    
+    python --version
+    pip --version
 } catch {
-    Write-Host "❌ Deployment failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Error "Python or pip not found. Please install Python 3.8 or later."
     exit 1
 }
 
-Write-Host ""
-Write-Host "🏁 Deployment completed successfully!" -ForegroundColor Green 
+# Verify Node.js installation
+Write-Host "Checking Node.js installation..."
+try {
+    node --version
+    npm --version
+} catch {
+    Write-Error "Node.js or npm not found. Please install Node.js 14 or later."
+    exit 1
+}
+
+# Create directory structure
+Write-Host "Creating directory structure..."
+foreach ($dir in $coreDirectories) {
+    $path = Join-Path $targetDir $dir
+    if (-not (Test-Path $path)) {
+        New-Item -ItemType Directory -Path $path -Force | Out-Null
+    }
+}
+
+# Copy template files
+Write-Host "Copying template files..."
+Copy-Item -Path "$templateRoot/.cursor/CORE/RULE-ENGINE/*" -Destination "$targetDir/.cursor/CORE/RULE-ENGINE/" -Recurse -Force
+Copy-Item -Path "$templateRoot/.cursor/CORE/ANALYTICS/*" -Destination "$targetDir/.cursor/CORE/ANALYTICS/" -Recurse -Force
+Copy-Item -Path "$templateRoot/.cursor/CORE/SSOT/*" -Destination "$targetDir/.cursor/CORE/SSOT/" -Recurse -Force
+Copy-Item -Path "$templateRoot/.cursor/CORE/MCP/*" -Destination "$targetDir/.cursor/CORE/MCP/" -Recurse -Force
+Copy-Item -Path "$templateRoot/mcp.json" -Destination "$targetDir/" -Force
+
+# Install Python dependencies
+Write-Host "Installing Python dependencies..."
+pip install -r "$templateRoot/requirements.txt"
+
+# Install Node.js dependencies (if any)
+if (Test-Path "$targetDir/package.json") {
+    Write-Host "Installing Node.js dependencies..."
+    Push-Location $targetDir
+    npm install --yes
+    Pop-Location
+}
+
+# Initialize SSOT system
+Write-Host "Initializing SSOT system..."
+Copy-Item -Path "$templateRoot/.cursor/CORE/SSOT/.INIT.template" -Destination "$targetDir/.cursor/CORE/SSOT/.INIT" -Force
+$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+Add-Content -Path "$targetDir/.cursor/CORE/SSOT/.HISTORY" -Value "[$timestamp] Initial deployment"
+
+# Configure MCP
+Write-Host "Configuring MCP..."
+if (-not (Test-Path "$targetDir/mcp.json")) {
+    Copy-Item -Path "$templateRoot/mcp.json" -Destination "$targetDir/" -Force
+}
+
+# Generate initial rules
+Write-Host "Generating initial rules..."
+python -c "from cursor.core.rule_engine import generate_initial_rules; generate_initial_rules()"
+
+# Launch dashboard
+Write-Host "Launching dashboard..."
+Start-Process python -ArgumentList "$targetDir/launch-dashboard.py"
+
+Write-Host "Deployment complete! The dashboard should now be accessible at http://localhost:5000" 

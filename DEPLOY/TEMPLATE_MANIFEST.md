@@ -167,3 +167,100 @@ DEPLOY/                                    # Root deployment directory
 **Template Status: ✅ READY FOR DEPLOYMENT**
 
 This template has been thoroughly verified and is ready for distribution to any new or existing project requiring the SSOT-RULE-ENGINE system. 
+
+## Core Components
+
+### Rule Engine
+- `.cursor/CORE/RULE-ENGINE/` - Core rule engine components
+  - `rule_generator.py` - Dynamic rule generation system
+  - `engine_integration.py` - System integration layer
+  - `templates/` - Rule templates for different languages
+  - `__init__.py` - Package initialization
+
+### Analytics Dashboard
+- `.cursor/CORE/ANALYTICS/` - Dashboard and visualization components
+  - `static/` - Static assets
+    - `css/` - Stylesheets
+      - `dashboard.css` - Main dashboard styles
+      - `kg-visualizer.css` - Knowledge Graph visualization styles
+    - `js/` - JavaScript
+      - `dashboard.js` - Main dashboard functionality
+      - `kg-visualizer.js` - Knowledge Graph visualization
+  - `templates/` - HTML templates
+    - `dashboard.html` - Main dashboard template
+  - `api/` - Backend API routes
+    - `kg_routes.py` - Knowledge Graph API endpoints
+  - `services/` - Business logic
+    - `kg_service.py` - Knowledge Graph service
+  - `mcp/` - MCP integration
+    - `kg_client.py` - Knowledge Graph MCP client
+
+### SSOT System
+- `.cursor/CORE/SSOT/` - Single Source of Truth components
+  - `.ENGINE` - Core engine instructions
+  - `.INIT` - Initialization state
+  - `.HISTORY` - Action history
+  - `.CONTEXT` - Project context
+  - `.FACTS` - Key decisions/constraints
+  - `.MEMORY` - Entity/relationship summaries
+  - `.PROGRESS` - Task completion tracking
+
+### MCP Integration
+- `.cursor/CORE/MCP/` - Memory Control Protocol components
+- `mcp.json` - MCP configuration
+
+## Deployment Files
+- `deploy.ps1` - Windows deployment script
+- `deploy.sh` - Unix deployment script
+- `requirements.txt` - Python dependencies
+- `.gitignore` - Git ignore patterns
+- `README.md` - Project documentation
+
+## Features
+
+### Rule Engine
+- Dynamic rule generation
+- Language-specific templates
+- Project-specific customization
+- Automatic rule updates
+
+### Analytics Dashboard
+- Project health monitoring (0-100 scoring)
+- Real-time updates
+- Knowledge Graph visualization
+- Rule management interface
+- Performance metrics
+- Error tracking
+
+### Knowledge Graph
+- Interactive visualization
+- Entity/relationship management
+- Type-based coloring
+- Search functionality
+- Graph analysis tools
+- MCP persistence
+
+### SSOT System
+- Centralized project state
+- History tracking
+- Context management
+- Progress monitoring
+
+## Deployment Process
+1. Copy template structure
+2. Run deployment script
+3. Configure MCP settings
+4. Initialize SSOT system
+5. Generate initial rules
+6. Launch dashboard
+
+## Requirements
+- Python 3.8+
+- Node.js 14+
+- Git
+- PowerShell (Windows) or Bash (Unix)
+
+## Configuration
+- MCP server settings in `mcp.json`
+- Rule engine settings in `.cursor/CORE/RULE-ENGINE/config.json`
+- Dashboard settings in `.cursor/CORE/ANALYTICS/config.json` 

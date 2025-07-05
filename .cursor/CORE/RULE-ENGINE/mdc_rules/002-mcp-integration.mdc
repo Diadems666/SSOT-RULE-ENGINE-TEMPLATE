@@ -1,0 +1,82 @@
+# MCP Server Integration Guidelines
+
+## Server Types and Usage
+1. Filesystem MCP Server
+   - Use for file operations and project traversal
+   - Maintain proper error handling
+   - Respect allowed directory restrictions
+
+2. Knowledge Graph MCP Server
+   - Store project knowledge and relationships
+   - Implement proper entity management
+   - Maintain data consistency
+
+3. Sequential Thinking Server
+   - Use for complex problem-solving
+   - Break down tasks appropriately
+   - Track reasoning steps
+
+## API Usage Guidelines
+1. Knowledge Graph Operations
+   ```typescript
+   // Entity Creation
+   create_entities({
+     name: "ComponentName",
+     entityType: "Component",
+     observations: ["Description", "Usage notes"]
+   });
+
+   // Relation Creation
+   create_relations({
+     from: "ComponentA",
+     to: "ComponentB",
+     relationType: "depends_on"
+   });
+   ```
+
+2. Filesystem Operations
+   ```typescript
+   // File Reading
+   read_file({
+     path: "path/to/file",
+     explanation: "Purpose of reading"
+   });
+
+   // Directory Operations
+   list_directory({
+     path: "target/directory",
+     explanation: "Purpose of listing"
+   });
+   ```
+
+## Error Handling
+- Implement proper error catching
+- Log all API errors
+- Maintain system stability
+- Provide meaningful error messages
+
+## Performance Optimization
+- Use caching when appropriate
+- Implement lazy loading
+- Optimize API calls
+- Monitor server performance
+
+## Security Guidelines
+- Respect file access restrictions
+- Validate all inputs
+- Handle sensitive data appropriately
+- Follow least privilege principle
+
+## Integration Testing
+- Test all API endpoints
+- Verify data consistency
+- Check error handling
+- Monitor performance metrics
+
+## References
+@.cursor/CORE/MCP/mcp.json
+@.cursor/CORE/SSOT/.ENGINE
+description:
+globs:
+alwaysApply: false
+---

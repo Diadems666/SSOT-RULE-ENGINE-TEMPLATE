@@ -1,137 +1,87 @@
 #!/bin/bash
 
-# SSOT-RULE-ENGINE-TEMPLATE Deployment Script
-# Bash script to deploy the template to a target project
+# SSOT Rule Engine Deployment Script (Unix)
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
-NC='\033[0m' # No Color
+# Default target directory is current directory
+TARGET_DIR=${1:-.}
+FORCE=${2:-false}
 
-# Function to print colored output
-print_color() {
-    echo -e "${1}${2}${NC}"
-}
+# Get script directory
+TEMPLATE_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Function to print usage
-usage() {
-    echo "Usage: $0 <target_path> [--force]"
-    echo "  target_path: Path to the project where you want to deploy the template"
-    echo "  --force:     Overwrite existing .cursor directory if it exists"
-    echo ""
-    echo "Example:"
-    echo "  $0 /path/to/your/project"
-    echo "  $0 /path/to/your/project --force"
+# Core directories to create
+CORE_DIRS=(
+    ".cursor/CORE/RULE-ENGINE"
+    ".cursor/CORE/ANALYTICS"
+    ".cursor/CORE/SSOT"
+    ".cursor/CORE/MCP"
+    ".cursor/CORE/MEMORY"
+    ".cursor/CORE/PROMPTS"
+)
+
+# Config files
+CONFIG_FILES=(
+    "mcp.json"
+    ".cursor/CORE/RULE-ENGINE/config.json"
+    ".cursor/CORE/ANALYTICS/config.json"
+)
+
+# Check Python installation
+echo "Checking Python installation..."
+if ! command -v python3 &> /dev/null || ! command -v pip3 &> /dev/null; then
+    echo "Error: Python 3.8+ or pip not found"
     exit 1
-}
+fi
 
-# Parse arguments
-TARGET_PATH=""
-FORCE=false
+# Check Node.js installation
+echo "Checking Node.js installation..."
+if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
+    echo "Error: Node.js 14+ or npm not found"
+    exit 1
+fi
 
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --force)
-            FORCE=true
-            shift
-            ;;
-        -h|--help)
-            usage
-            ;;
-        *)
-            if [[ -z "$TARGET_PATH" ]]; then
-                TARGET_PATH="$1"
-            else
-                print_color $RED "Error: Too many arguments"
-                usage
-            fi
-            shift
-            ;;
-    esac
+# Create directory structure
+echo "Creating directory structure..."
+for dir in "${CORE_DIRS[@]}"; do
+    mkdir -p "$TARGET_DIR/$dir"
 done
 
-# Validate arguments
-if [[ -z "$TARGET_PATH" ]]; then
-    print_color $RED "Error: Target path is required"
-    usage
+# Copy template files
+echo "Copying template files..."
+cp -r "$TEMPLATE_ROOT/.cursor/CORE/RULE-ENGINE/"* "$TARGET_DIR/.cursor/CORE/RULE-ENGINE/"
+cp -r "$TEMPLATE_ROOT/.cursor/CORE/ANALYTICS/"* "$TARGET_DIR/.cursor/CORE/ANALYTICS/"
+cp -r "$TEMPLATE_ROOT/.cursor/CORE/SSOT/"* "$TARGET_DIR/.cursor/CORE/SSOT/"
+cp -r "$TEMPLATE_ROOT/.cursor/CORE/MCP/"* "$TARGET_DIR/.cursor/CORE/MCP/"
+cp "$TEMPLATE_ROOT/mcp.json" "$TARGET_DIR/"
+
+# Install Python dependencies
+echo "Installing Python dependencies..."
+pip3 install -r "$TEMPLATE_ROOT/requirements.txt"
+
+# Install Node.js dependencies (if any)
+if [ -f "$TARGET_DIR/package.json" ]; then
+    echo "Installing Node.js dependencies..."
+    (cd "$TARGET_DIR" && npm install --yes)
 fi
 
-print_color $GREEN "🚀 SSOT-RULE-ENGINE-TEMPLATE Deployment Script"
-print_color $GREEN "==============================================="
+# Initialize SSOT system
+echo "Initializing SSOT system..."
+cp "$TEMPLATE_ROOT/.cursor/CORE/SSOT/.INIT.template" "$TARGET_DIR/.cursor/CORE/SSOT/.INIT"
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+echo "[$timestamp] Initial deployment" >> "$TARGET_DIR/.cursor/CORE/SSOT/.HISTORY"
 
-# Validate target path
-if [[ ! -d "$TARGET_PATH" ]]; then
-    print_color $RED "❌ Error: Target path does not exist: $TARGET_PATH"
-    exit 1
+# Configure MCP
+echo "Configuring MCP..."
+if [ ! -f "$TARGET_DIR/mcp.json" ]; then
+    cp "$TEMPLATE_ROOT/mcp.json" "$TARGET_DIR/"
 fi
 
-# Check if target already has .cursor directory
-TARGET_CURSOR_PATH="$TARGET_PATH/.cursor"
-if [[ -d "$TARGET_CURSOR_PATH" ]] && [[ "$FORCE" == false ]]; then
-    print_color $YELLOW "⚠️  Warning: Target project already has .cursor directory!"
-    print_color $YELLOW "Use --force parameter to overwrite, or choose a different target."
-    exit 1
-fi
+# Generate initial rules
+echo "Generating initial rules..."
+python3 -c "from cursor.core.rule_engine import generate_initial_rules; generate_initial_rules()"
 
-print_color $CYAN "📁 Target Project: $TARGET_PATH"
-print_color $CYAN "📦 Deploying SSOT-RULE-ENGINE-TEMPLATE..."
+# Launch dashboard
+echo "Launching dashboard..."
+python3 "$TARGET_DIR/launch-dashboard.py" &
 
-# Get the script directory (where DEPLOY folder is)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPLOY_DIR="$SCRIPT_DIR"
-
-# Copy .cursor directory
-print_color $YELLOW "📋 Copying .cursor directory..."
-SOURCE_CURSOR_PATH="$DEPLOY_DIR/.cursor"
-
-if [[ -d "$TARGET_CURSOR_PATH" ]]; then
-    rm -rf "$TARGET_CURSOR_PATH"
-fi
-
-if [[ -d "$SOURCE_CURSOR_PATH" ]]; then
-    cp -r "$SOURCE_CURSOR_PATH" "$TARGET_PATH/"
-    print_color $GREEN "✅ .cursor directory copied successfully"
-else
-    print_color $RED "❌ Error: .cursor directory not found in template"
-    exit 1
-fi
-
-# Copy launch-dashboard.py
-print_color $YELLOW "📋 Copying launch-dashboard.py..."
-SOURCE_DASHBOARD="$DEPLOY_DIR/launch-dashboard.py"
-TARGET_DASHBOARD="$TARGET_PATH/launch-dashboard.py"
-
-if [[ -f "$SOURCE_DASHBOARD" ]]; then
-    cp "$SOURCE_DASHBOARD" "$TARGET_DASHBOARD"
-    print_color $GREEN "✅ launch-dashboard.py copied successfully"
-else
-    print_color $YELLOW "⚠️  Warning: launch-dashboard.py not found in template"
-fi
-
-# Copy .gitignore if it doesn't exist
-SOURCE_GITIGNORE="$DEPLOY_DIR/.gitignore"
-TARGET_GITIGNORE="$TARGET_PATH/.gitignore"
-
-if [[ -f "$SOURCE_GITIGNORE" ]] && [[ ! -f "$TARGET_GITIGNORE" ]]; then
-    print_color $YELLOW "📋 Copying .gitignore..."
-    cp "$SOURCE_GITIGNORE" "$TARGET_GITIGNORE"
-    print_color $GREEN "✅ .gitignore copied successfully"
-fi
-
-echo ""
-print_color $GREEN "🎉 DEPLOYMENT SUCCESSFUL!"
-print_color $GREEN "========================="
-echo ""
-print_color $CYAN "📍 Next Steps:"
-print_color $WHITE "1. Navigate to your project: cd \"$TARGET_PATH\""
-print_color $WHITE "2. Run the initialization trigger: !!-ADD-.ENGINE-!!"
-print_color $WHITE "3. Wait for the analytics dashboard to launch"
-print_color $WHITE "4. Access dashboard at: http://localhost:8080"
-echo ""
-print_color $YELLOW "💡 For help, check the README.md or run: !!-HEALTH-CHECK-!!"
-
-echo ""
-print_color $GREEN "🏁 Deployment completed successfully!" 
+echo "Deployment complete! The dashboard should now be accessible at http://localhost:5000" 

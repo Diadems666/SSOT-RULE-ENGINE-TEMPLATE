@@ -1,0 +1,64 @@
+{
+  "id": "file_backup_001",
+  "name": "Automatic File Backup",
+  "pattern": "file_modified",
+  "priority": 1,
+  "is_active": true,
+  "description": "Automatically create backups of modified files",
+  "created_at": "2024-03-19T10:00:00Z",
+  "updated_at": "2024-03-19T10:00:00Z",
+  "tags": ["backup", "file_operations", "automation"],
+  "conditions": {
+    "operator": "and",
+    "conditions": [
+      {
+        "field": "event.type",
+        "operator": "eq",
+        "value": "file_modified"
+      },
+      {
+        "field": "file.extension",
+        "operator": "in",
+        "value": [".py", ".json", ".md"]
+      },
+      {
+        "field": "file.size",
+        "operator": "lt",
+        "value": 10485760
+      }
+    ]
+  },
+  "actions": [
+    {
+      "type": "backup_file",
+      "params": {
+        "source_path": "${file.path}",
+        "backup_dir": ".cursor/CORE/RULE-ENGINE/backups"
+      }
+    },
+    {
+      "type": "log",
+      "params": {
+        "level": "info",
+        "message": "Created backup of file: ${file.path}"
+      }
+    },
+    {
+      "type": "publish_event",
+      "params": {
+        "event_type": "file_backup_created",
+        "payload": {
+          "source_file": "${file.path}",
+          "backup_file": "${backup.path}",
+          "timestamp": "${current_timestamp}"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "author": "SSOT Rule Engine",
+    "version": "1.0.0",
+    "category": "file_operations",
+    "description": "This rule automatically creates backups of modified files that match specific criteria"
+  }
+} 
