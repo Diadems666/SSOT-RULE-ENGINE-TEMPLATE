@@ -1,0 +1,68 @@
+**SSOT-RULE-ENGINE-TEMPLATE Technical Facts**
+
+**Key Technical Decisions:**
+
+**1. Architecture Decisions:**
+- **SSOT Pattern**: Centralized state management in `.cursor/CORE/SSOT/` directory
+- **MCP Integration**: Three specialized servers for enhanced AI capabilities
+- **Python Analytics**: Flask/FastAPI-based dashboard and analytics engine
+- **Node.js MCP Servers**: TypeScript-based server implementations
+- **JSON Configuration**: Structured configuration via mcp.json and .jsonl files
+- **Deployment Automation**: PowerShell (deploy.ps1) and Bash (deploy.sh) scripts for cross-platform setup
+- **Manifest & Verification**: TEMPLATE_MANIFEST.md and DEPLOYMENT_VERIFICATION.md for quality assurance
+
+**2. File Structure Constraints:**
+- SSOT files must be in `.cursor/CORE/SSOT/` directory
+- MCP servers in `.cursor/CORE/MCP/` subdirectories
+- Active rules in `.cursor/rules/` directory
+- Staged rules in `.cursor/CORE/RULE-ENGINE/` directory
+- Analytics system in `.cursor/CORE/ANALYTICS/` directory
+- Manifest and verification in DEPLOY root
+
+**3. MCP Server Configuration:**
+- **knowledge-graph**: Memory path `.cursor/CORE/MEMORY/memory.jsonl`
+- **sequential-thinking**: Advanced reasoning capabilities
+- **filesystem**: Enhanced file operations with debug mode
+- **Ports**: Knowledge Graph on 3100, auto-restart enabled
+- **Environment**: Production mode with compression enabled
+
+**4. Rule Engine Constraints:**
+- Rules use `.mdc` format with frontmatter
+- Global rules have `alwaysApply: true`
+- File-specific rules use glob patterns
+- Rule precedence: required > available > general
+- Generated rules staged before activation
+
+**5. Analytics System Facts:**
+- Health scoring: 0-100 scale across multiple dimensions
+- Real-time monitoring via web dashboard
+- Multi-dimensional analysis (SSOT, MCP, Rules, Project)
+- Performance metrics tracking
+- Interactive visualization components
+
+**6. Integration Requirements:**
+- Node.js v16+ for MCP servers
+- Python 3.x for analytics
+- npm for MCP server installation
+- Browser access for dashboard interface
+- Cursor IDE with AI capabilities
+
+**7. Security Constraints:**
+- Memory files excluded from git
+- Debug logs controlled via environment variables
+- Sensitive configuration in .env files
+- Dashboard access controls implemented
+
+**8. Performance Considerations:**
+- Caching enabled for MCP client operations
+- Auto-restart for failed MCP servers
+- Compression for large data transfers
+- Connection timeout and retry logic
+- Memory usage monitoring
+
+**9. Template Quality Assurance:**
+- All non-source artifacts (node_modules, dist, package-lock.json) removed
+- Manifest and verification checklist ensure template integrity
+- .INIT.template included for new project initialization
+- All files and scripts tested for cross-platform compatibility
+- Template status: ✅ READY FOR DEPLOYMENT 

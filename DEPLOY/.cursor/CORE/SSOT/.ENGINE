@@ -1,0 +1,210 @@
+## Central Instructions for SSOT, Rule Engine, and MCP Setup
+
+**Objective:** This file (`./.cursor/CORE/SSOT/.ENGINE`) contains the consolidated instruction set for initiating various system workflows: base SSOT/Rule Engine setup, MCP server setup, Knowledge Graph building, SSOT maintenance, analytics system management, and utility functions (portable state, chat history, docs, GitHub prep). It supports multiple distinct workflows triggered by specific phrases in the Cursor chat.
+
+**Trigger Mechanisms:**
+1.  `!!-INIT-.ENGINE-!!`: Used in a chat *after* providing a detailed project description.
+2.  `!!-ADD-.ENGINE-!!`: Used by itself in a chat for an existing project.
+3.  `!!-INSTALL-MCP-!!`: Used after base setup to install MCP servers.
+4.  `!!-BUILD-KG-!!`: Used after MCP installation/config to build initial Knowledge Graph.
+5.  `!!-LOAD-PORTABLE-!!`: Loads project state from ./.cursor/CORE/SSOT/.PORTABLE.
+6.  `!!-UPDATE-SSOT-!!`: Synthesizes and updates SSOT files based on recent activity.
+7.  `!!-CREATE-PORTABLE-!!`: Creates a self-contained .PORTABLE snapshot file.
+8.  `!!-CREATE-CHAT-HISTORY-!!`: Copies current chat history to ./.cursor/CORE/SSOT/.CHAT.
+9.  `!!-UPDATE-DOCS-!!`: Analyzes project state and updates documentation (e.g., README.md).
+10. `!!-PREPARE-GITHUB-!!`: Analyzes project for GitHub readiness (.gitignore, cleanup).
+11. `!!-LAUNCH-DASHBOARD-!!`: Launches the analytics dashboard system.
+12. `!!-ANALYZE-PROJECT-!!`: Runs comprehensive project analysis and health scoring.
+13. `!!-VIEW-DASHBOARD-!!`: Opens the analytics dashboard in browser.
+14. `!!-HEALTH-CHECK-!!`: Performs quick project health assessment.
+
+**Workflow Execution:**
+
+Upon receiving *any* recognized trigger phrase, execute the instructions below by finding the matching trigger and following its specific steps.
+
+1.  **Acknowledge Trigger & Determine Workflow:**
+    * Confirm receipt of the trigger phrase.
+    * State clearly which workflow is being initiated based on the trigger received.
+
+2.  **Execute Workflow-Specific Logic:**
+
+    * **IF Trigger is `!!-INIT-.ENGINE-!!`:**
+        * **Input Source:** Preceding chat project description.
+        * **SSOT Population Source:** Project description.
+        * **Action:**
+            * Navigate to `./.cursor/CORE/SSOT`.
+            * Create `.PROMPT`, copy *full* chat input verbatim into it.
+            * Leverage description & User Rules ("Project Setup...") to auto-populate `.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`.
+            * Acknowledge `.PROMPT` as full source, others as derived from description.
+            * **Proceed to Step 3 (Create Directory Structure).**
+            * **After completion, automatically execute `!!-LAUNCH-DASHBOARD-!!`.**
+
+    * **ELSE IF Trigger is `!!-ADD-.ENGINE-!!`:**
+        * **Input Source:** Comprehensive codebase analysis.
+        * **SSOT Population Source:** Codebase analysis findings.
+        * **Action:**
+            * Declare codebase analysis is starting.
+            * Perform comprehensive, recursive project analysis (purpose, tech, architecture, components, dependencies, patterns, docs) per User Rules.
+            * Navigate to `./.cursor/CORE/SSOT`.
+            * Leverage analysis & User Rules to auto-populate `.INIT`, `.HISTORY`, `.CONTINUE`, `.CONTEXT`, `.FACTS`, `.MEMORY`, `.PROGRESS`. **Do NOT create `.PROMPT`.**
+            * Acknowledge analysis as source, SSOT as derived state.
+            * **Proceed to Step 3 (Create Directory Structure).**
+            * **After completion, automatically execute `!!-LAUNCH-DASHBOARD-!!`.**
+
+    * **ELSE IF Trigger is `!!-INSTALL-MCP-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/CORE/MCP/knowledge-graph`, `./sequentialthinking`, `./filesystem` exist. Verify `./.cursor/mcp.json` exists. Halt with instructions if checks fail.
+        * **Action:**
+            * State MCP server installation is beginning.
+            * Navigate to `./.cursor/CORE/MCP/knowledge-graph`, execute `npm install`, inform user about permissions.
+            * Navigate to `./.cursor/CORE/MCP/sequentialthinking`, execute `npm install`, inform user.
+            * Navigate to `./.cursor/CORE/MCP/filesystem`, execute `npm install`, inform user.
+            * Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording `npm install` via `!!-INSTALL-MCP-!!`.
+            * **Final Confirmation:** State MCP *installation* complete. List actions. Confirm `mcp.json` should be in `./.cursor/`. Advise restart/server check before KG build.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-BUILD-KG-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/mcp.json` exists and suggests servers are configured/installed (check for server dirs/likely install outputs). Halt with instructions if checks fail (advise `!!-INSTALL-MCP-!!`).
+        * **Input Source:** Codebase and existing SSOT files.
+        * **Action: Execute Knowledge Graph Construction** (Based on .MEMORIZE logic)
+            * State task start: Building KG using MCP KG server API.
+            * **Execution Strategy:** Follow the "Execution Strategy" steps and "Using the API - Important Considerations" from the logic originally in the .MEMORIZE file (as now understood by the AI via User Rules and this file's intent). This involves:
+                * Initial Scan & Entity Creation (Structure: project, directory, file) using `create_entities`.
+                * Initial Relation Creation (Structure: `contains`) using `create_relations`.
+                * Code Analysis & Entity Creation (Components: class, function, interface, config_item, service) using `open_nodes` and `create_entities`. Explicitly create `service:MCP_KnowledgeGraph`.
+                * Relation Creation (Code Connections: `defined_in`, `depends_on`, `calls`, `uses`, `implements`, `extends`, `integrates_with`, `has_test_file`) using `create_relations`, handling prerequisite entities.
+                * Observation Extraction & Addition using `add_observations`, batching where possible. Add observations to all relevant entities based on analysis (paths, comments, signatures, package.json, config, etc.). Represent MCP integration.
+                * Review and Refine (Optional: use `read_graph`, `search_nodes`, `open_nodes` to inspect and add missing details via API calls).
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording initial KG construction via `!!-BUILD-KG-!!`.
+            * **Final Confirmation:** State initial graph construction complete. Confirm KG represents project based on analysis. Advise AI ready to leverage KG.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-LOAD-PORTABLE-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/CORE/SSOT/.PORTABLE` exists and is readable. If missing, halt and state file not found.
+        * **Action:**
+            * State loading state from `./.cursor/CORE/SSOT/.PORTABLE`.
+            * Read and parse the `.PORTABLE` file content.
+            * **Populate SSOT:** Overwrite/populate `./.cursor/CORE/SSOT/.CONTEXT`, `.FACTS`, `.MEMORY`, `.HISTORY`, `.CONTINUE`, `.PROGRESS` based *solely* on `.PORTABLE` content. Handle data structures as defined in `.PORTABLE`'s format.
+            * **Populate KG (Optional/Advanced):** If `./.cursor/mcp.json` exists and suggests KG server is running, attempt to clear existing KG data (if applicable and safe) and populate it based on entity/relation/observation data described within `.PORTABLE` using KG API calls (`create_entities`, `create_relations`, `add_observations`). Handle API errors.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording state load from `.PORTABLE` via `!!-LOAD-PORTABLE-!!`.
+            * **Final Confirmation:** State state loading complete and readiness to proceed based on loaded state in SSOT/KG.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-UPDATE-SSOT-!!`:**
+        * **Input Source:** Recent changes, completed tasks, current project state (via analysis, SSOT files, KG).
+        * **Action:**
+            * State SSOT update process is beginning based on recent activity.
+            * Synthesize updates for SSOT files based on recent changes/completed tasks (e.g., look at chat history, file changes, task context).
+            * Navigate to `./.cursor/CORE/SSOT`.
+            * Append descriptive entry to `.HISTORY` about the update trigger and changes made.
+            * Update `.FACTS` with new decisions/constraints.
+            * Refine project `.MEMORY` with new/modified components/concepts.
+            * Review/update `.CONTEXT` overview.
+            * Define next task in `.CONTINUE`.
+            * Update `.PROGRESS`.
+            * **Update KG (Optional/Advanced):** Interact with active KG server via API to update its representation based on these changes (`create_entities`, `create_relations`, `add_observations`, `update_nodes`, potentially `delete_entities`/`relations`/`observations` if removing things). Handle API errors.
+            * **Final Confirmation:** State SSOT (and KG if applicable) updates complete based on recent activity.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-CREATE-PORTABLE-!!`:**
+        * **Input Source:** All current project knowledge: SSOT files (.INIT, .HISTORY, etc., .PROMPT if exists), relevant integrated rules (from . ./rules), codebase analysis, current MCP config (mcp.json), queryable state from active MCP servers (KG, Filesystem).
+        * **Action:**
+            * State creation of `./.cursor/CORE/SSOT/.PORTABLE` snapshot is beginning.
+            * Synthesize a thorough, self-contained snapshot of key project state and knowledge from all sources. Define a clear format for .PORTABLE (e.g., structured text, JSON, or a format mimicking SSOT/KG structure). Include:
+                * Summaries/contents of SSOT files.
+                * List/summaries of active project rules from . ./rules.
+                * Key findings from codebase analysis/KG structure (e.g., major components, dependencies, inferred architecture).
+                * Relevant parts of mcp.json config.
+                * Reference to the original prompt (.PROMPT) if it exists.
+            * Navigate to `./.cursor/CORE/SSOT`.
+            * Create or overwrite `.PORTABLE` with the synthesized snapshot content.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording creation of `.PORTABLE` via `!!-CREATE-PORTABLE-!!`.
+            * **Final Confirmation:** State `.PORTABLE` file created/updated in `./.cursor/CORE/SSOT/`. Confirm it's a self-contained snapshot.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-CREATE-CHAT-HISTORY-!!`:**
+        * **Input Source:** Current chat history with the user.
+        * **Action:**
+            * State creation/update of `./.cursor/CORE/SSOT/.CHAT` with current chat history.
+            * Obtain the complete current chat history (both user and agent messages) up to this point.
+            * Navigate to `./.cursor/CORE/SSOT`.
+            * Create or overwrite `.CHAT` with the chat history content. Define a simple, readable format (e.g., markdown, timestamped entries).
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording creation/update of `.CHAT` via `!!-CREATE-CHAT-HISTORY-!!`.
+            * **Final Confirmation:** State `.CHAT` file created/updated in `./.cursor/CORE/SSOT/` with current chat history.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-UPDATE-DOCS-!!`:**
+        * **Input Source:** Current project state (SSOT files, integrated rules from . ./rules, codebase analysis, KG state).
+        * **Action:**
+            * State documentation update process is beginning based on current project state.
+            * Analyze current project state, focusing on details relevant to documentation (purpose, setup, architecture, components, APIs, usage).
+            * **Update `README.md`:** Navigate to project root. Review and update `README.md` to ensure it aligns with current `.CONTEXT` (overview), `.FACTS` (setup/decisions), `.MEMORY`/KG (key components), and references triggers/system structure where appropriate.
+            * **Update Code Comments:** Navigate project codebase. Add/update code comments (docstrings/block comments) for public APIs, complex logic, etc., consistent with integrated project rules.
+            * **Optional: Create other docs:** If appropriate based on project analysis, create/update other documentation files (e.g., in a `docs/` folder) covering architecture, modules, etc., based on `.FACTS`/KG and code structure.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording documentation update via `!!-UPDATE-DOCS-!!`.
+            * **Final Confirmation:** State documentation updates (including `README.md`) complete, aligned with current project state.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-PREPARE-GITHUB-!!`:**
+        * **Input Source:** Current codebase and working directory state (Filesystem server), SSOT `.FACTS` (technologies).
+        * **Action:**
+            * State project preparation for GitHub upload is beginning.
+            * Analyze codebase and working directory for items to exclude: temporary files, sensitive data patterns (log files, config files potentially containing creds), build artifacts, large datasets.
+            * **Update `.gitignore`:** Navigate to project root. Review existing `.gitignore`. Update it comprehensively based on identified technologies (`.FACTS`, analysis) and items to exclude.
+            * **Verify Docs:** Check if `README.md` and other core docs in standard locations (e.g., `docs/`) are present. Recommend running `!!-UPDATE-DOCS-!!` if they seem missing or outdated.
+            * **Optional: Run Checks:** If integrated rules or standard practices suggest it, perform checks like linting or formatting.
+            * **Report Issues:** Report any identified issues (e.g., potential sensitive files not ignored, missing docs, lint errors).
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording GitHub preparation actions via `!!-PREPARE-GITHUB-!!`.
+            * **Final Confirmation:** State project workspace analyzed and `.gitignore` updated for GitHub readiness. Report any potential issues found.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-LAUNCH-DASHBOARD-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/CORE/ANALYTICS/` directory exists. If missing, create it with core analytics files.
+        * **Input Source:** Current project state and analytics configuration.
+        * **Action:**
+            * State analytics dashboard launch is beginning.
+            * Navigate to `./.cursor/CORE/ANALYTICS`.
+            * Execute Python startup script: `python startup.py` to launch dashboard in background.
+            * Verify dashboard is accessible (typically http://localhost:8080 or next available port).
+            * Create/update USER-RULES template file for easy copying.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording dashboard launch via `!!-LAUNCH-DASHBOARD-!!`.
+            * **Final Confirmation:** State dashboard launched successfully with URL. Confirm features available: Analytics, Rule Engine Management, USER-RULES Template, SSOT System Overview.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-ANALYZE-PROJECT-!!`:**
+        * **Prerequisite Check:** Verify `./.cursor/CORE/ANALYTICS/analytics_engine.py` exists. If missing, advise running `!!-LAUNCH-DASHBOARD-!!` first.
+        * **Input Source:** Complete project analysis via analytics engine.
+        * **Action:**
+            * State comprehensive project analysis is beginning.
+            * Navigate to `./.cursor/CORE/ANALYTICS`.
+            * Execute analytics engine: `python analytics_engine.py` to perform full analysis.
+            * Review generated analytics reports (JSON and Markdown formats).
+            * Display key insights: project health score, recommendations, system status.
+            * **SSOT History Update:** Navigate to `./.cursor/CORE/SSOT`, append timestamped entry to `.HISTORY` recording analysis completion via `!!-ANALYZE-PROJECT-!!`.
+            * **Final Confirmation:** State analysis complete. Provide health score and top 3 recommendations. Suggest viewing full dashboard for detailed insights.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-VIEW-DASHBOARD-!!`:**
+        * **Prerequisite Check:** Verify dashboard is running by checking for dashboard process or attempting connection to typical ports.
+        * **Action:**
+            * State opening analytics dashboard.
+            * Attempt to detect running dashboard (check ports 8080-8090).
+            * If dashboard not running, automatically execute `!!-LAUNCH-DASHBOARD-!!`.
+            * Open browser to dashboard URL.
+            * **Final Confirmation:** State dashboard opened in browser with URL.
+            * **STOP.**
+
+    * **ELSE IF Trigger is `!!-HEALTH-CHECK-!!`:**
+        * **Input Source:** Quick system health assessment.
+        * **Action:**
+            * State performing quick health check.
+            * Check SSOT system completeness (count existing .INIT, .CONTEXT, .FACTS, etc.).
+            * Check MCP configuration (verify mcp.json exists).
+            * Check rule engine status (count active rules in .cursor/rules/).
+            * Check analytics system (verify ANALYTICS directory and key files).
+            * Calculate quick health percentage based on system completeness.
+            * **Final Confirmation:** State health check complete. Provide overall health percentage and any critical issues found.
+            * **STOP.**
+
+    * **ELSE (Unrecognized Trigger):**
+        * State that the received trigger is not recognized by the `.ENGINE` file. List the recognized triggers for reference.
+        * **STOP.**

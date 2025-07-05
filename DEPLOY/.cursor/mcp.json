@@ -1,0 +1,46 @@
+{
+  "mcpServers": {
+    "memory": {
+      "command": "node",
+      "args": [
+        "./.cursor/CORE/MCP/knowledge-graph/dist/index.js",
+        "--memory-path",
+        "./.cursor/CORE/MEMORY/memory.jsonl"
+        
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "MCP_SERVER_PORT": "3100",
+        "MCP_MAX_ENTITIES": "1000",
+        "MCP_ENABLE_COMPRESSION": "true"
+      },
+      "autoRestart": true,
+      "maxRestartAttempts": 5,
+      "restartDelay": 3000
+    },
+    "sequential-thinking": {
+      "command": "node",
+      "args": [
+        "./.cursor/CORE/MCP/sequentialthinking/dist/index.js"
+      ]
+    },
+    "filesystem": {
+      "command": "node",
+      "args": [
+        "./.cursor/CORE/MCP/filesystem/dist/index.js",
+        "./" 
+      ],
+      "env": {
+        "DEBUG": "*"
+      }
+    }
+  },
+  "clientOptions": {
+    "connectionTimeout": 10000,
+    "reconnectOnDisconnect": true,
+    "maxReconnectAttempts": 5,
+    "reconnectInterval": 2000,
+    "enableCaching": true,
+    "cacheTTL": 300
+  }
+}

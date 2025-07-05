@@ -1,38 +1,8 @@
-# SSOT-RULE-ENGINE USER-RULES Template
-# Copy this content to your Cursor AI settings for optimal integration
-
 # Core AI Behavior & Workflow Management
 - As an AI assistant within the Cursor AI IDE for default_developer, provide efficient, accurate, and contextually relevant assistance, leveraging all available tools including the Knowledge Graph Memory Server.
 - Recognize and strictly follow directives within the project's core system files (e.g., in ./.cursor/CORE/SSOT/).
 - Understand that specific triggers initiate system setup workflows, and the *detailed instructions* for ALL setup workflows ('INIT', 'ADD', 'INSTALL MCP', 'BUILD KG') are centralized in ./.cursor/CORE/SSOT/.ENGINE.
 - When encountering ANY of the following triggers ('!!-INIT-.ENGINE-!!', '!!-ADD-.ENGINE-!!', '!!-INSTALL-MCP-!!', '!!-BUILD-KG-!!'), immediately consult and execute the relevant steps defined within ./.cursor/CORE/SSOT/.ENGINE for the specific trigger identified.
-
-# Analytics System Integration
-- When projects are first initialized (!!-INIT-.ENGINE-!! or !!-ADD-.ENGINE-!!), automatically launch the analytics dashboard using !!-LAUNCH-DASHBOARD-!!
-- Use !!-ANALYZE-PROJECT-!! for comprehensive project analysis and health scoring
-- Use !!-VIEW-DASHBOARD-!! to launch the interactive analytics dashboard
-- Use !!-HEALTH-CHECK-!! for quick project health assessment
-- Monitor project health metrics and provide intelligent recommendations for optimization
-
-# Advanced Analytics Features
-- Real-time project health monitoring with 0-100 scoring system
-- Interactive dashboard with visual charts and system status indicators
-- Intelligent recommendations engine for development optimization
-- Rule engine effectiveness tracking and visual management interface
-- SSOT system analytics and completeness monitoring
-- MCP server performance metrics and usage analytics
-
-# Visual Rule Engine Management
-- Use the dashboard's Rule Engine interface for visual rule management
-- View, edit, create, and delete rules through the web interface
-- Monitor rule effectiveness and usage patterns
-- Stage new rules in .cursor/CORE/RULE-ENGINE/ before activation
-- Track rule impact on project development and code quality
-
-# Rule Integration & Precedence
-- Always apply the alwaysApply: true .mdc rules (such as 001-bottle-shop-rules and 001-ssot-synchronization) to all interactions.
-- When specific files are in context, apply corresponding glob-matched .mdc rules.
-- When rules conflict, prioritize in order: required_instructions > available_instructions > general User Rules.
 
 # Project Identification & Context Management
 - You are interacting with default_developer.
@@ -67,6 +37,11 @@
 - After any significant action (setup, analysis, install, KG build, development task), update .HISTORY with a timestamp and brief description.
 - Use .CONTINUE for next focus/task. Maintain .CONTEXT as high-level overview. Record key decisions/constraints in .FACTS. .MEMORY contains structured summaries of entities/relationships. .PROGRESS tracks task completion.
 - Ensure consistency between SSOT summaries and detailed Knowledge Graph data where overlap exists.
+
+# Focused Memory Management (Organized and Accessible via Knowledge Graph API)
+- Utilize conceptual memory spaces within the Knowledge Graph (e.g., "Code," "Documentation," "Error," "Task," "Deployment," "Design").
+- Select and prioritize appropriate memory space(s) using identifiers with `search_nodes`.
+- When storing information via KG API (`create_entities`, `create_relations`, `add_observations`), tag data with relevant memory space identifiers.
 
 # Advanced Knowledge Graph Focus (Reasoning and Optimization via API)
 - Monitor and store information across categories in KG: Architectural Patterns, Performance Metrics, Security, Testing, Version Control, APIs, Documentation.
@@ -108,7 +83,7 @@
 
 # Project Setup & Initialization Trigger Handling (Delegating to .ENGINE)
 - This rule directs AI to ./.cursor/CORE/SSOT/.ENGINE for detailed setup logic for all relevant triggers.
-- When ANY of the triggers ('!!-INIT-.ENGINE-!!', '!!-ADD-.ENGINE-!!', '!!-INSTALL-MCP-!!', '!!-BUILD-KG-!!', '!!-LAUNCH-DASHBOARD-!!') is received, the AI MUST load and execute the corresponding workflow steps defined within ./.cursor/CORE/SSOT/.ENGINE.
+- When ANY of the triggers ('!!-INIT-.ENGINE-!!', '!!-ADD-.ENGINE-!!', '!!-INSTALL-MCP-!!', '!!-BUILD-KG-!!') is received, the AI MUST load and execute the corresponding workflow steps defined within ./.cursor/CORE/SSOT/.ENGINE.
 - Follow .ENGINE's logic for input source (.PROMPT/description vs. codebase analysis vs. trigger command only) based on the specific trigger.
 - Follow .ENGINE's logic for creating directories, handling .cursorrules, installing MCP (using npm), placing generated .mdc rules in ./.cursor/CORE/RULE-ENGINE/, updating workflow rule, creating/using .PROMPT, and performing codebase analysis for the 'ADD' or 'BUILD-KG' workflows.
 - Adhere to prerequisite checks defined in .ENGINE before executing specific workflow steps (e.g., check for MCP dirs/mcp.json before INSTALL or BUILD-KG).

@@ -1,9 +1,9 @@
 {
   "summary": {
-    "project_name": "Project Context",
-    "analysis_timestamp": "2025-07-02T22:24:00.643645",
+    "project_name": "",
+    "analysis_timestamp": "2025-07-05T15:37:22.290754",
     "total_files": 99,
-    "total_lines": 14647,
+    "total_lines": 14623,
     "ssot_health_score": 64.02,
     "mcp_servers_status": {
       "knowledge-graph": "not_ready",
@@ -12,13 +12,13 @@
     },
     "knowledge_graph_entities": 0,
     "active_rules": 1,
-    "development_velocity": 2.6,
-    "last_activity": "2025-07-02T22:14:34.991078",
+    "development_velocity": 0.0,
+    "last_activity": "2025-07-05T15:32:09.618843",
     "health_indicators": {
       "ssot": {
         "completeness": "excellent",
         "consistency": "high",
-        "last_update": "2025-07-02T22:14:34.991078"
+        "last_update": "2025-07-05T15:32:09.618843"
       },
       "mcp": {
         "server_status": "partial",
@@ -35,26 +35,26 @@
   "detailed_analytics": {
     "ssot_system": {
       "files_analyzed": 8,
-      "total_content_size": 41687,
+      "total_content_size": 34415,
       "last_updates": {
-        ".ENGINE": "2025-07-02T22:12:28.047535",
-        ".INIT": "2025-07-02T18:14:04.277075",
-        ".CONTEXT": "2025-07-02T18:14:04.273069",
-        ".FACTS": "2025-07-02T18:14:04.276073",
-        ".MEMORY": "2025-07-02T18:14:04.278071",
-        ".HISTORY": "2025-07-02T22:14:34.991078",
-        ".CONTINUE": "2025-07-02T18:14:04.274070",
-        ".PROGRESS": "2025-07-02T18:14:04.279559"
+        ".ENGINE": "2025-07-05T15:19:27.058612",
+        ".INIT": "2025-07-05T15:29:46.296889",
+        ".CONTEXT": "2025-07-05T15:29:56.434140",
+        ".FACTS": "2025-07-05T15:30:19.259503",
+        ".MEMORY": "2025-07-05T15:30:39.207603",
+        ".HISTORY": "2025-07-05T15:32:09.618843",
+        ".CONTINUE": "2025-07-05T15:31:16.620505",
+        ".PROGRESS": "2025-07-05T15:31:32.618256"
       },
       "content_distribution": {
         ".ENGINE": 18471,
-        ".INIT": 2327,
-        ".CONTEXT": 2335,
-        ".FACTS": 2114,
-        ".MEMORY": 2353,
-        ".HISTORY": 9619,
-        ".CONTINUE": 3321,
-        ".PROGRESS": 1147
+        ".INIT": 1520,
+        ".CONTEXT": 1945,
+        ".FACTS": 2312,
+        ".MEMORY": 2741,
+        ".HISTORY": 2221,
+        ".CONTINUE": 2227,
+        ".PROGRESS": 2978
       },
       "state_completeness": 1.0,
       "consistency_score": 1.0
@@ -94,6 +94,6 @@
       "Review rule effectiveness and consider updating rule patterns"
     ]
   },
-  "generated_at": "2025-07-02T22:24:00.644252",
+  "generated_at": "2025-07-05T15:37:22.294854",
   "report_version": "1.0"
 }

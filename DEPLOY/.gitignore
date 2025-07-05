@@ -1,0 +1,70 @@
+# SSOT-RULE-ENGINE-TEMPLATE Template .gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# MCP compiled output
+.cursor/CORE/MCP/*/dist/
+.cursor/CORE/MCP/*/build/
+
+# SSOT state files (generated at runtime)
+.cursor/CORE/SSOT/.INIT
+.cursor/CORE/SSOT/.CONTEXT
+.cursor/CORE/SSOT/.FACTS
+.cursor/CORE/SSOT/.MEMORY
+.cursor/CORE/SSOT/.HISTORY
+.cursor/CORE/SSOT/.CONTINUE
+.cursor/CORE/SSOT/.PROGRESS
+.cursor/CORE/SSOT/.PROMPT
+
+# Analytics generated files
+.cursor/CORE/ANALYTICS/analytics_report.json
+.cursor/CORE/ANALYTICS/analytics_report.md
+.cursor/CORE/ANALYTICS/dashboard_info.json
+
+# Knowledge Graph data
+.cursor/CORE/MEMORY/*.jsonl
+.cursor/CORE/MEMORY/*.json
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project-specific files that should not be in template
+package-lock.json
+yarn.lock
+.env
+.env.local
+.env.*.local 

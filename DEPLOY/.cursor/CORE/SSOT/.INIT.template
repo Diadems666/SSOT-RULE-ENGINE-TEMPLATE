@@ -1,0 +1,43 @@
+# SSOT-RULE-ENGINE-TEMPLATE Project Initialization Template
+# This file will be populated during deployment based on the target project
+
+**Project Type:** [To be determined during analysis]
+**Analysis Source:** [INIT or ADD workflow]
+**Initialization Date:** [Current date]
+**Project Status:** [New or existing codebase]
+
+**Core Purpose:**
+[Project-specific purpose to be determined during deployment]
+
+**Key Features:**
+- 🧠 Persistent AI Memory via Knowledge Graph
+- 📋 Centralized SSOT State Management
+- 🎛️ Context-Aware AI Behavior through Rule Engine
+- 🔧 Advanced AI Capabilities via MCP servers
+- 📊 Intelligent Project Tracking and Analytics
+- 📈 Real-time Project Health Monitoring
+
+**System Architecture:**
+The SSOT-RULE-ENGINE-TEMPLATE provides a foundation for:
+- Intelligent project state management
+- Context-aware AI assistance
+- Advanced analytics and monitoring
+- Persistent project memory
+- Automated workflow orchestration
+
+**Template Features:**
+- Complete .cursor directory structure
+- Pre-configured MCP servers
+- Analytics dashboard system
+- Rule engine framework
+- Comprehensive documentation
+- Deployment automation scripts
+
+**Next Steps:**
+1. Run !!-ADD-.ENGINE-!! or !!-INIT-.ENGINE-!! to initialize
+2. Analytics dashboard will launch automatically
+3. MCP servers will be installed and configured
+4. Knowledge Graph will be populated with project data
+5. System will be ready for intelligent AI assistance
+
+**Note:** This template file will be replaced with project-specific information during deployment. 

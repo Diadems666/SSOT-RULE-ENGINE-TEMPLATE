@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSOT Analytics Dashboard - Project Context</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>📊 SSOT Analytics Dashboard</h1>
+                <p class="project-name">Project Context</p>
+                <div class="last-updated">
+                    Last updated: <span id="last-updated">2025-07-02 22:24:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Overview Cards -->
+            <section class="overview-section">
+                <div class="cards-grid">
+                    <div class="metric-card health-score">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-content">
+                            <h3>Health Score</h3>
+                            <div class="metric-value">64.02/100</div>
+                            <div class="metric-status good">
+                                Good
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="card-icon">📁</div>
+                        <div class="card-content">
+                            <h3>Project Files</h3>
+                            <div class="metric-value">99</div>
+                            <div class="metric-detail">14,647 lines of code</div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="card-icon">🎛️</div>
+                        <div class="card-content">
+                            <h3>Active Rules</h3>
+                            <div class="metric-value">1</div>
+                            <div class="metric-detail">0 staged</div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="card-icon">🧠</div>
+                        <div class="card-content">
+                            <h3>Knowledge Graph</h3>
+                            <div class="metric-value">0</div>
+                            <div class="metric-detail">entities</div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-content">
+                            <h3>Development Velocity</h3>
+                            <div class="metric-value">2.6/10</div>
+                            <div class="metric-detail">Recent activity</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Status -->
+            <section class="status-section">
+                <h2>🔧 System Status</h2>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <h3>📋 SSOT System</h3>
+                        <div class="status-indicators">
+                            <div class="status-item">
+                                <span class="status-label">Completeness:</span>
+                                <span class="status-badge excellent">
+                                    Excellent
+                                </span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Consistency:</span>
+                                <span class="status-badge excellent">
+                                    High
+                                </span>
+                            </div>
+                        </div>
+                        <div class="status-details">
+                            <p>Files: 8/8</p>
+                            <p>Size: 40.7 KB</p>
+                        </div>
+                    </div>
+                    
+                    <div class="status-card">
+                        <h3>🚀 MCP Servers</h3>
+                        <div class="status-indicators">
+                            <div class="status-item">
+                                <span class="status-label">Server Status:</span>
+                                <span class="status-badge good">
+                                    Partial
+                                </span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Memory:</span>
+                                <span class="status-badge excellent">
+                                    Optimal
+                                </span>
+                            </div>
+                        </div>
+                        <div class="status-details">
+                            <p>Ready: 1/3</p>
+                            <p>Memory: 0.0 MB</p>
+                        </div>
+                    </div>
+                    
+                    <div class="status-card">
+                        <h3>🎯 Rule Engine</h3>
+                        <div class="status-indicators">
+                            <div class="status-item">
+                                <span class="status-label">Coverage:</span>
+                                <span class="status-badge needs-attention">
+                                    Needs_Improvement
+                                </span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Effectiveness:</span>
+                                <span class="status-badge needs-attention">
+                                    Low
+                                </span>
+                            </div>
+                        </div>
+                        <div class="status-details">
+                            <p>Coverage: 0.2%</p>
+                            <p>Total Rules: 1</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>📊 System Health Distribution</h3>
+                        <canvas id="healthChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>📈 Project Overview</h3>
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommendations -->
+            <section class="recommendations-section">
+                <h2>💡 Recommendations</h2>
+                <div class="recommendations-list">
+                    <div class="recommendation-item high-priority">Install and compile MCP servers using '!!-INSTALL-MCP-!!'</div><div class="recommendation-item high-priority">Build Knowledge Graph using '!!-BUILD-KG-!!' to enable persistent memory</div><div class="recommendation-item medium-priority">Add more rules to improve project coverage and AI behavior consistency</div><div class="recommendation-item medium-priority">Review rule effectiveness and consider updating rule patterns</div>
+                </div>
+            </section>
+
+            <!-- Project Insights -->
+            <section class="insights-section">
+                <h2>🔍 Project Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h3>📋 SSOT System Analysis</h3>
+                        <p>Your SSOT system is well-configured with all core files present. The system maintains consistent state tracking and provides comprehensive project context management.</p>
+                        <div class="insight-metrics">
+                            <span class="metric">Files: 8/8</span>
+                            <span class="metric">Health: 64%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>🚀 MCP Integration</h3>
+                        <p>Model Context Protocol servers are configured and ready. This enables advanced AI capabilities including persistent memory and enhanced reasoning.</p>
+                        <div class="insight-metrics">
+                            <span class="metric">Servers: 3/3</span>
+                            <span class="metric">Memory: 0.0MB</span>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>🎯 Development Progress</h3>
+                        <p>The project shows good development velocity with active rule management and knowledge graph integration. Consider expanding rule coverage for better AI guidance.</p>
+                        <div class="insight-metrics">
+                            <span class="metric">Velocity: 2.6/10</span>
+                            <span class="metric">Rules: 1</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Auto-refresh functionality
+        setInterval(() => {
+            location.reload();
+        }, 30000);
+
+        // Initialize charts
+        
+        // Health Chart
+        const healthCtx = document.getElementById('healthChart').getContext('2d');
+        new Chart(healthCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['SSOT', 'MCP', 'Rules'],
+                datasets: [{
+                    data: [100.0, 33.3, 0.2],
+                    backgroundColor: [
+                        '#4facfe',
+                        '#00f2fe',
+                        '#43e97b'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Overview Chart
+        const overviewCtx = document.getElementById('overviewChart').getContext('2d');
+        new Chart(overviewCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Files', 'Rules', 'KG Entities', 'Health Score'],
+                datasets: [{
+                    label: 'Project Metrics',
+                    data: [99, 1, 0, 64.02],
+                    backgroundColor: [
+                        'rgba(79, 172, 254, 0.6)',
+                        'rgba(0, 242, 254, 0.6)',
+                        'rgba(67, 233, 123, 0.6)',
+                        'rgba(118, 75, 162, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(79, 172, 254, 1)',
+                        'rgba(0, 242, 254, 1)',
+                        'rgba(67, 233, 123, 1)',
+                        'rgba(118, 75, 162, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+    </script>
+</body>
+</html>

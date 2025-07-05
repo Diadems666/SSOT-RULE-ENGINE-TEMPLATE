@@ -1,4 +1,51 @@
-# SSOT-RULE-ENGINE USER-RULES Template
+#!/usr/bin/env python3
+"""
+SSOT-RULE-ENGINE Startup Script
+Automatically launches analytics dashboard and initializes system monitoring
+"""
+
+import subprocess
+import sys
+import time
+import webbrowser
+from pathlib import Path
+import json
+import os
+
+def find_available_port(start_port=8080, max_attempts=10):
+    """Find an available port for the dashboard"""
+    import socket
+    
+    for i in range(max_attempts):
+        port = start_port + i
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(('localhost', port))
+                return port
+        except OSError:
+            continue
+    
+    return start_port  # Fallback to default
+
+def ensure_analytics_directory():
+    """Ensure analytics directory exists with required files"""
+    analytics_dir = Path('.cursor/CORE/ANALYTICS')
+    analytics_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Ensure analytics engine exists
+    engine_file = analytics_dir / 'analytics_engine.py'
+    if not engine_file.exists():
+        print("⚠️ Analytics engine not found. Please ensure analytics_engine.py exists.")
+        return False
+    
+    return True
+
+def create_user_rules_template():
+    """Create or update USER-RULES template file"""
+    analytics_dir = Path('.cursor/CORE/ANALYTICS')
+    user_rules_file = analytics_dir / 'USER-RULES-TEMPLATE.md'
+    
+    template_content = """# SSOT-RULE-ENGINE USER-RULES Template
 # Copy this content to your Cursor AI settings for optimal integration
 
 # Core AI Behavior & Workflow Management
@@ -113,3 +160,173 @@
 - Follow .ENGINE's logic for creating directories, handling .cursorrules, installing MCP (using npm), placing generated .mdc rules in ./.cursor/CORE/RULE-ENGINE/, updating workflow rule, creating/using .PROMPT, and performing codebase analysis for the 'ADD' or 'BUILD-KG' workflows.
 - Adhere to prerequisite checks defined in .ENGINE before executing specific workflow steps (e.g., check for MCP dirs/mcp.json before INSTALL or BUILD-KG).
 - Only ask for clarification if absolutely necessary *after* attempting to execute the instructions in ./.cursor/CORE/SSOT/.ENGINE and processing the required input source.
+"""
+    
+    with open(user_rules_file, 'w', encoding='utf-8') as f:
+        f.write(template_content)
+    
+    print(f"✅ USER-RULES template created: {user_rules_file}")
+    return user_rules_file
+
+def launch_dashboard(port=None, background=False):
+    """Launch the analytics dashboard"""
+    if not ensure_analytics_directory():
+        return False
+    
+    if port is None:
+        port = find_available_port()
+    
+    dashboard_script = Path('.cursor/CORE/ANALYTICS/dashboard.py')
+    
+    try:
+        if background:
+            # Launch in background
+            process = subprocess.Popen(
+                [sys.executable, str(dashboard_script), str(port)],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=Path.cwd()
+            )
+            
+            # Give it a moment to start
+            time.sleep(2)
+            
+            # Check if process is still running
+            if process.poll() is None:
+                print(f"🚀 Analytics dashboard launched in background")
+                print(f"📊 Dashboard URL: http://localhost:{port}")
+                return {'port': port, 'process': process, 'url': f"http://localhost:{port}"}
+            else:
+                stdout, stderr = process.communicate()
+                print(f"❌ Failed to launch dashboard in background")
+                print(f"Error: {stderr.decode()}")
+                return False
+        else:
+            # Launch in foreground
+            subprocess.run([sys.executable, str(dashboard_script), str(port)], 
+                         cwd=Path.cwd())
+            return True
+            
+    except Exception as e:
+        print(f"❌ Error launching dashboard: {e}")
+        return False
+
+def auto_open_browser(url, delay=3):
+    """Automatically open browser to dashboard URL"""
+    def open_browser():
+        time.sleep(delay)
+        try:
+            webbrowser.open(url)
+            print(f"🌐 Browser opened to: {url}")
+        except Exception as e:
+            print(f"⚠️ Could not open browser automatically: {e}")
+            print(f"📱 Please manually open: {url}")
+    
+    import threading
+    browser_thread = threading.Thread(target=open_browser)
+    browser_thread.daemon = True
+    browser_thread.start()
+
+def run_initial_analysis():
+    """Run initial project analysis"""
+    analytics_engine = Path('.cursor/CORE/ANALYTICS/analytics_engine.py')
+    
+    if analytics_engine.exists():
+        try:
+            print("🔍 Running initial project analysis...")
+            result = subprocess.run([sys.executable, str(analytics_engine)], 
+                                  cwd=Path.cwd(), 
+                                  capture_output=True, 
+                                  text=True)
+            
+            if result.returncode == 0:
+                print("✅ Initial analysis completed successfully")
+                return True
+            else:
+                print(f"⚠️ Analysis completed with warnings: {result.stderr}")
+                return True
+        except Exception as e:
+            print(f"❌ Error running initial analysis: {e}")
+            return False
+    else:
+        print("⚠️ Analytics engine not found, skipping initial analysis")
+        return False
+
+def create_dashboard_info_file(dashboard_info):
+    """Create a file with dashboard information for easy access"""
+    info_file = Path('.cursor/CORE/ANALYTICS/dashboard_info.json')
+    
+    dashboard_data = {
+        'port': dashboard_info.get('port'),
+        'url': dashboard_info.get('url'),
+        'launched_at': time.time(),
+        'status': 'running'
+    }
+    
+    with open(info_file, 'w') as f:
+        json.dump(dashboard_data, f, indent=2)
+    
+    print(f"📝 Dashboard info saved: {info_file}")
+
+def initialize_analytics_system(auto_open=True, run_analysis=True):
+    """Full analytics system initialization"""
+    print("\n🚀 Initializing SSOT-RULE-ENGINE Analytics System...")
+    print("=" * 60)
+    
+    # Create USER-RULES template
+    create_user_rules_template()
+    
+    # Run initial analysis if requested
+    if run_analysis:
+        run_initial_analysis()
+    
+    # Launch dashboard
+    dashboard_info = launch_dashboard(background=True)
+    
+    if dashboard_info:
+        # Save dashboard info
+        create_dashboard_info_file(dashboard_info)
+        
+        # Auto-open browser if requested
+        if auto_open:
+            auto_open_browser(dashboard_info['url'])
+        
+        print("\n" + "=" * 60)
+        print("✅ SSOT-RULE-ENGINE Analytics System Initialized!")
+        print("=" * 60)
+        print(f"📊 Dashboard: {dashboard_info['url']}")
+        print(f"⚙️ Features: Analytics | Rule Engine | USER-RULES | SSOT")
+        print(f"🔄 Auto-refresh: Enabled")
+        print(f"📱 Browser: {'Auto-opened' if auto_open else 'Manual open required'}")
+        print("=" * 60)
+        
+        return dashboard_info
+    else:
+        print("❌ Failed to initialize analytics system")
+        return False
+
+def main():
+    """Main startup function"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='SSOT-RULE-ENGINE Analytics Startup')
+    parser.add_argument('--port', type=int, help='Dashboard port (default: auto-detect)')
+    parser.add_argument('--no-browser', action='store_true', help='Don\'t auto-open browser')
+    parser.add_argument('--no-analysis', action='store_true', help='Skip initial analysis')
+    parser.add_argument('--foreground', action='store_true', help='Run dashboard in foreground')
+    
+    args = parser.parse_args()
+    
+    if args.foreground:
+        # Launch dashboard in foreground mode
+        port = args.port or find_available_port()
+        launch_dashboard(port=port, background=False)
+    else:
+        # Full initialization
+        initialize_analytics_system(
+            auto_open=not args.no_browser,
+            run_analysis=not args.no_analysis
+        )
+
+if __name__ == "__main__":
+    main() 

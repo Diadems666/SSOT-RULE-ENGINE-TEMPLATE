@@ -1,0 +1,45 @@
+**SSOT-RULE-ENGINE-TEMPLATE Project Context**
+
+**Project Overview:**
+A gold-standard AI development framework template for rapid deployment of SSOT, MCP, analytics, and rule engine systems. The template enables intelligent state management, context-aware behavior, and advanced analytics in any project.
+
+**Current Focus:**
+Distribution and deployment of the verified template to new/existing projects. All components are cleaned, documented, and ready for use.
+
+**System Architecture:**
+```
+DEPLOY/
+├── .cursor/ (SSOT, MCP, Analytics, Rule Engine, Memory)
+├── launch-dashboard.py
+├── deploy.ps1 / deploy.sh
+├── README.md
+├── TEMPLATE_MANIFEST.md
+├── DEPLOYMENT_VERIFICATION.md
+```
+
+**Key Components:**
+1. **SSOT System**: Centralized project state in 8 core files
+2. **MCP Integration**: 3 specialized servers (knowledge-graph, sequential-thinking, filesystem)
+3. **Analytics Engine**: Real-time health monitoring with 0-100 scoring
+4. **Rule Engine**: Context-aware AI behavior management
+5. **Dashboard**: Interactive web interface for project oversight
+6. **Deployment**: Scripts and manifest for automated, quality-assured setup
+
+**Technology Stack:**
+- **Backend**: Python 3.x (Flask/FastAPI-based analytics)
+- **MCP Servers**: Node.js with TypeScript
+- **Configuration**: JSON/JSONL
+- **Documentation**: Markdown
+- **Frontend**: HTML/CSS/JavaScript dashboard
+- **Deployment**: PowerShell/Bash scripts, manifest, verification checklist
+
+**Project Health Indicators:**
+- Total Files: 44 (template)
+- Template Size: ~1.2MB
+- SSOT Health Score: 100/100 (template)
+- MCP Server Status: Ready for install
+- Active Rules: 1
+- Deployment Readiness: ✅
+
+**Current State:**
+Framework template is complete, verified, and ready for distribution. Use the DEPLOY folder for rapid, quality-assured setup in any project. 

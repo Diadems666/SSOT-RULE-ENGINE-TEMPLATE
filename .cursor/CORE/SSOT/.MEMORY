@@ -1,0 +1,68 @@
+**SSOT-RULE-ENGINE-TEMPLATE Component Memory**
+
+**Core System Components:**
+
+**1. SSOT (Single Source of Truth) System:**
+- **Purpose**: Centralized project state management
+- **Location**: `.cursor/CORE/SSOT/`
+- **Key Files**: .ENGINE, .INIT, .CONTEXT, .FACTS, .MEMORY, .HISTORY, .CONTINUE, .PROGRESS
+- **Function**: Workflow orchestration, state persistence, project tracking
+- **Template**: .INIT.template for new project initialization
+
+**2. MCP (Model Context Protocol) Servers:**
+- **knowledge-graph**: Entity-relationship project modeling with persistent memory
+- **sequential-thinking**: Multi-step reasoning and complex problem solving
+- **filesystem**: Enhanced file operations and directory analysis
+- **Configuration**: mcp.json with auto-restart and performance optimization
+- **Status**: Source code only, ready for npm install
+
+**3. Analytics Engine:**
+- **Core File**: `analytics_engine.py` (24KB, 592 lines)
+- **Function**: Project health assessment, multi-dimensional analysis
+- **Metrics**: SSOT completeness, MCP status, rule effectiveness
+- **Output**: JSON reports, markdown summaries, health scores
+- **Status**: Unicode issues fixed, ready for deployment
+
+**4. Dashboard System:**
+- **Main File**: `dashboard.py` (42KB, 1083 lines)
+- **Features**: Web interface, visual rule engine, real-time monitoring
+- **Startup**: `startup.py` (18KB, 332 lines) with auto-launch
+- **Access**: HTTP server with analytics tabs and rule management
+- **Status**: Import errors fixed, ready for deployment
+
+**5. Rule Engine:**
+- **Format**: `.mdc` files with frontmatter configuration
+- **Active Rules**: Located in `.cursor/rules/`
+- **Staging**: Generated rules in `.cursor/CORE/RULE-ENGINE/`
+- **Current**: `999-mdc-format.mdc` (4.6KB, 137 lines)
+
+**6. Configuration Systems:**
+- **MCP Config**: `.cursor/mcp.json` (1.0KB, 46 lines)
+- **User Rules**: `.cursor/USER-RULES.md` (9.2KB, 91 lines)
+- **Git Config**: `.gitignore` for Python, Flask, and development artifacts
+
+**7. Memory Storage:**
+- **Knowledge Graph**: `.cursor/CORE/MEMORY/memory.jsonl`
+- **Entity Types**: project, directory, file, class, function, interface
+- **Relationships**: contains, depends_on, calls, uses, implements
+- **Persistence**: JSONL format with compression
+
+**8. Documentation System:**
+- **Main Doc**: `README.md` (12KB, 357 lines)
+- **Templates**: `USER-RULES-TEMPLATE.md` for easy setup
+- **Analytics Reports**: JSON and Markdown formats
+- **Setup Instructions**: Complete workflow documentation
+- **Manifest**: TEMPLATE_MANIFEST.md (full file inventory)
+- **Verification**: DEPLOYMENT_VERIFICATION.md (deployment checklist)
+
+**9. Utility Scripts:**
+- **Dashboard Launcher**: `launch-dashboard.py` (1.2KB, 38 lines)
+- **CLI Interface**: `cli.py` (14KB, 345 lines)
+- **Startup Automation**: Auto-launch after initialization
+- **Deployment Scripts**: deploy.ps1 (Windows), deploy.sh (Unix/Linux/macOS)
+
+**10. Project Structure:**
+- **Root Files**: README, launch script, git configuration, manifest, verification
+- **Core Directory**: SSOT, MCP, Analytics, Rule Engine, Memory
+- **DEPLOY Folder**: Complete, distributable template for rapid project setup
+- **Template Nature**: Reusable, quality-assured framework for AI-enhanced development 
