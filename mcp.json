@@ -1,0 +1,25 @@
+{
+    "servers": {
+        "knowledge_graph": {
+            "host": "localhost",
+            "port": 5002,
+            "type": "memory"
+        },
+        "sequential_thinking": {
+            "host": "localhost",
+            "port": 5001,
+            "type": "sequential-thinking"
+        },
+        "filesystem": {
+            "host": "localhost",
+            "port": 5003,
+            "type": "filesystem"
+        }
+    },
+    "clientOptions": {
+        "retryAttempts": 3,
+        "retryDelay": 1,
+        "cacheEnabled": true,
+        "cacheTimeout": 300
+    }
+} 

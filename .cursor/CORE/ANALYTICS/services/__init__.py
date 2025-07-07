@@ -1,3 +1,3 @@
 """
-Services package initialization
+SSOT Rule Engine Analytics Services Package
 """ 

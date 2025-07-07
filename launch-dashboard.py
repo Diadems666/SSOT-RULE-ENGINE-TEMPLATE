@@ -1,51 +1,57 @@
 #!/usr/bin/env python3
 """
-Quick Launch Script for SSOT-RULE-ENGINE Analytics Dashboard
-Place in project root for easy access
+SSOT Rule Engine Dashboard
+Launches the analytics dashboard with AI and Knowledge Graph integration
 """
 
 import os
 import sys
 import json
 import logging
+import asyncio
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import webbrowser
-from flask import Flask, render_template, jsonify, request, send_from_directory
-from flask_cors import CORS
+from quart import Quart, render_template, jsonify, request, send_from_directory
+from werkzeug.exceptions import HTTPException
+from quart_cors import cors
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configure Python path for imports
-current_dir = os.path.dirname(os.path.abspath(__file__))
-cursor_dir = os.path.join(current_dir, '.cursor')
-sys.path.insert(0, cursor_dir)
+# Add project root to Python path
+project_root = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
 
-# Import components
-try:
-    from CORE.ANALYTICS import create_app
-    from CORE.ANALYTICS.mcp.kg_client import KGClient
-    ai_enabled = True
-except ImportError as e:
-    logger.warning(f"AI components not available: {e}")
-    ai_enabled = False
+# Import application components
+from cursor.CORE.ANALYTICS.routes import ai_bp
+from cursor.CORE.ANALYTICS.services import AIService
+from cursor.CORE.ANALYTICS.mcp import KGClient
 
-# Initialize Flask app
-app = create_app() if ai_enabled else Flask(__name__,
-    static_folder='.cursor/CORE/ANALYTICS/static',
-    template_folder='.cursor/CORE/ANALYTICS/templates')
+# Enable AI service
+ai_enabled = True
 
-if not ai_enabled:
-    CORS(app)
+# Create Quart application
+app = Quart(__name__, 
+            static_folder=os.path.join(project_root, 'cursor/CORE/ANALYTICS/static'),
+            template_folder=os.path.join(project_root, 'cursor/CORE/ANALYTICS/templates'))
 
-# Initialize Knowledge Graph client
-kg_client = KGClient() if ai_enabled else None
+# Enable CORS
+app = cors(app)
+
+# Initialize services
+app.ai_service = AIService()
+app.kg_client = KGClient()
+
+# Register blueprints
+app.register_blueprint(ai_bp, url_prefix='/api/ai')
+
+@app.route('/')
+async def index():
+    """Render dashboard"""
+    return await render_template('dashboard.html')
 
 class DashboardManager:
     def __init__(self):
@@ -53,15 +59,15 @@ class DashboardManager:
         self.health_score = 100
         self.rule_engine_status = "operational"
         
-    def get_health(self) -> Dict[str, Any]:
+    async def get_health(self) -> Dict[str, Any]:
         """Get dashboard health status"""
         self.last_health_check = datetime.now()
         
         # Check various components
         components = {
-            'rule_engine': self._check_rule_engine(),
-            'ai_service': self._check_ai_service(),
-            'kg_service': self._check_kg_service()
+            'rule_engine': await self._check_rule_engine(),
+            'ai_service': await self._check_ai_service(),
+            'kg_service': await self._check_kg_service()
         }
         
         # Calculate overall health
@@ -73,15 +79,15 @@ class DashboardManager:
             'timestamp': self.last_health_check.isoformat()
         }
     
-    def get_rule_engine_status(self) -> Dict[str, Any]:
+    async def get_rule_engine_status(self) -> Dict[str, Any]:
         """Get rule engine status"""
         return {
             'status': self.rule_engine_status,
-            'active_rules': self._get_active_rules(),
+            'active_rules': await self._get_active_rules(),
             'last_update': datetime.now().isoformat()
         }
     
-    def _check_rule_engine(self) -> Dict[str, Any]:
+    async def _check_rule_engine(self) -> Dict[str, Any]:
         """Check rule engine health"""
         return {
             'status': 'operational',
@@ -89,7 +95,7 @@ class DashboardManager:
             'message': 'Rule engine is functioning normally'
         }
     
-    def _check_ai_service(self) -> Dict[str, Any]:
+    async def _check_ai_service(self) -> Dict[str, Any]:
         """Check AI service health"""
         if not ai_enabled:
             return {
@@ -104,22 +110,23 @@ class DashboardManager:
             'message': 'AI service is functioning normally'
         }
     
-    def _check_kg_service(self) -> Dict[str, Any]:
+    async def _check_kg_service(self) -> Dict[str, Any]:
         """Check Knowledge Graph service health"""
-        if not kg_client:
+        if not app.kg_client:
             return {
                 'status': 'disabled',
                 'score': 0,
                 'message': 'Knowledge Graph service is not enabled'
             }
         
+        is_connected = await app.kg_client.is_connected()
         return {
-            'status': 'operational' if kg_client.is_connected() else 'error',
-            'score': 100 if kg_client.is_connected() else 0,
-            'message': 'Knowledge Graph service is functioning normally' if kg_client.is_connected() else 'Failed to connect to Knowledge Graph'
+            'status': 'operational' if is_connected else 'error',
+            'score': 100 if is_connected else 0,
+            'message': 'Knowledge Graph service is functioning normally' if is_connected else 'Failed to connect to Knowledge Graph'
         }
     
-    def _get_active_rules(self) -> List[Dict[str, Any]]:
+    async def _get_active_rules(self) -> List[Dict[str, Any]]:
         """Get list of active rules"""
         # TODO: Implement actual rule loading logic
         return [
@@ -129,42 +136,37 @@ class DashboardManager:
 # Initialize dashboard manager
 dashboard = DashboardManager()
 
-@app.route('/')
-def index():
-    """Render dashboard homepage"""
-    return render_template('index.html')
-
 @app.route('/api/health')
-def health():
+async def health():
     """Get dashboard health status"""
-    return jsonify(dashboard.get_health())
+    return await jsonify(await dashboard.get_health())
 
 @app.route('/api/rule-engine/status')
-def rule_engine_status():
+async def rule_engine_status():
     """Get rule engine status"""
-    return jsonify(dashboard.get_rule_engine_status())
+    return await jsonify(await dashboard.get_rule_engine_status())
 
 @app.route('/api/kg/visualize')
-def visualize_kg():
+async def visualize_kg():
     """Get Knowledge Graph visualization data"""
-    if not kg_client:
-        return jsonify({'error': 'Knowledge Graph service not available'}), 503
-    return jsonify(kg_client.get_visualization_data())
+    if not app.kg_client:
+        return await jsonify({'error': 'Knowledge Graph service not available'}), 503
+    data = await app.kg_client.get_visualization_data()
+    return await jsonify(data)
 
-def main():
+async def main():
     """Main entry point"""
     try:
-        port = 5000
-        url = f"http://localhost:{port}"
-        
-        print(f"Starting dashboard server at {url}")
-        webbrowser.open(url)
-        
-        app.run(debug=True, port=port)
+        # Run app
+        await app.run_task(
+            host='0.0.0.0',
+            port=5000,
+            debug=True
+        )
         
     except Exception as e:
-        logger.error(f"Failed to start dashboard: {e}")
+        logger.error(f"Failed to launch dashboard: {str(e)}")
         sys.exit(1)
 
 if __name__ == '__main__':
-    main() 
+    asyncio.run(main()) 

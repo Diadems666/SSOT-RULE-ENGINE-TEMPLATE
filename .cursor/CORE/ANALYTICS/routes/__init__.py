@@ -1,5 +1,5 @@
 """
-Routes package initialization
+SSOT Rule Engine Analytics Routes Package
 """
 
 from flask import Blueprint 

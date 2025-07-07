@@ -1,0 +1,154 @@
+{
+    "max_history": 10,
+    "temperature": 0.7,
+    "max_tokens": 1000,
+    "model": "gemma-3b-it",
+    "model_path": "./.cursor/CORE/AI/models",
+    "cache_enabled": true,
+    "cache_ttl": 3600,
+    "feedback_enabled": true,
+    "auto_update_metrics": true,
+    "health_check_interval": 30000,
+    "llm": {
+        "model": "cursor-ai",
+        "temperature": 0.7,
+        "max_tokens": 2000,
+        "context_window": 8192
+    },
+    "rule_generation": {
+        "templates": {
+            "python": {
+                "file_extension": ".py",
+                "format": "mdc",
+                "cursor_settings": {
+                    "alwaysApply": true,
+                    "description": "Generated Python rule",
+                    "pattern": ["*.py"],
+                    "priority": 1
+                }
+            },
+            "typescript": {
+                "file_extension": ".ts",
+                "format": "mdc",
+                "cursor_settings": {
+                    "alwaysApply": true,
+                    "description": "Generated TypeScript rule",
+                    "pattern": ["*.ts", "*.tsx"],
+                    "priority": 1
+                }
+            },
+            "markdown": {
+                "file_extension": ".md",
+                "format": "mdc",
+                "cursor_settings": {
+                    "alwaysApply": true,
+                    "description": "Generated documentation rule",
+                    "pattern": ["*.md"],
+                    "priority": 1
+                }
+            }
+        },
+        "prompts": {
+            "rule": "Generate a Cursor AI rule following MDC format and guidelines...",
+            "documentation": "Generate comprehensive documentation for the rule...",
+            "analysis": "Analyze the codebase for potential rule suggestions..."
+        }
+    },
+    "documentation": {
+        "formats": ["markdown", "html"],
+        "sections": [
+            "overview",
+            "usage",
+            "examples",
+            "configuration",
+            "best_practices",
+            "troubleshooting"
+        ],
+        "templates": {
+            "rule": "# {name}\n\n## Overview\n\n{description}\n\n...",
+            "api": "# {name} API\n\n## Endpoints\n\n{endpoints}\n\n...",
+            "component": "# {name} Component\n\n## Props\n\n{props}\n\n..."
+        }
+    },
+    "mcp_integration": {
+        "memory_enhancement": {
+            "features": [
+                "relationship_detection",
+                "pattern_recognition",
+                "usage_suggestions",
+                "optimization_hints"
+            ],
+            "confidence_threshold": 0.8,
+            "max_suggestions": 5
+        },
+        "knowledge_graph": {
+            "node_types": [
+                "file",
+                "function",
+                "class",
+                "module",
+                "package"
+            ],
+            "relationship_types": [
+                "imports",
+                "extends",
+                "implements",
+                "uses",
+                "defines"
+            ],
+            "visualization": {
+                "colors": {
+                    "file": "#27ae60",
+                    "function": "#2980b9",
+                    "class": "#8e44ad",
+                    "module": "#c0392b",
+                    "package": "#d35400"
+                },
+                "icons": {
+                    "file": "📄",
+                    "function": "⚡",
+                    "class": "🔷",
+                    "module": "📦",
+                    "package": "📚"
+                }
+            }
+        }
+    },
+    "cursor_api": {
+        "endpoints": {
+            "generate": "/ai/generate",
+            "analyze": "/ai/analyze",
+            "enhance": "/ai/enhance"
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "X-API-Version": "1.0"
+        },
+        "rate_limits": {
+            "requests_per_minute": 60,
+            "burst_limit": 10
+        }
+    },
+    "codebase_analysis": {
+        "scan_patterns": [
+            "*.py",
+            "*.ts",
+            "*.tsx",
+            "*.js",
+            "*.jsx",
+            "*.md"
+        ],
+        "exclude_patterns": [
+            "node_modules/**",
+            "dist/**",
+            "build/**",
+            "**/*.test.*"
+        ],
+        "analysis_types": [
+            "rule_suggestions",
+            "documentation_needs",
+            "code_patterns",
+            "dependencies"
+        ]
+    }
+} 

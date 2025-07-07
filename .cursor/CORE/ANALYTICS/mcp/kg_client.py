@@ -1,105 +1,110 @@
 """
-Knowledge Graph Client for SSOT Rule Engine Dashboard
+Knowledge Graph Client for SSOT Rule Engine
+Handles communication with the MCP Knowledge Graph server
 """
 
 import os
 import json
+import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime
+import aiohttp
+import asyncio
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 class KGClient:
     def __init__(self):
-        self.memory_file = os.path.join('.cursor', 'CORE', 'MEMORY', 'memory.jsonl')
-        self.connected = False
-        self.last_sync = None
-        self._ensure_memory_file()
+        self.config = self._load_config()
+        self.base_url = f"http://{self.config['servers']['knowledge_graph']['host']}:{self.config['servers']['knowledge_graph']['port']}"
+        self.session = None
+        self.retry_attempts = self.config['clientOptions']['retryAttempts']
+        self.retry_delay = self.config['clientOptions']['retryDelay']
         
-    def is_connected(self) -> bool:
-        """Check if connected to Knowledge Graph"""
-        return self.connected
-        
-    def get_relevant_context(self, query: str) -> Dict[str, Any]:
-        """Get relevant context from Knowledge Graph for a query"""
+    def _load_config(self) -> Dict[str, Any]:
+        """Load MCP configuration"""
         try:
-            # Load memory entries
-            entries = self._load_memory()
-            
-            # TODO: Implement actual context retrieval logic
-            relevant_entries = self._filter_relevant_entries(entries, query)
-            
-            return {
-                'entries': relevant_entries,
-                'timestamp': datetime.now().isoformat()
-            }
-            
+            with open('mcp.json', 'r') as f:
+                return json.load(f)
         except Exception as e:
-            return {
-                'error': str(e),
-                'timestamp': datetime.now().isoformat()
-            }
-    
-    def get_visualization_data(self) -> Dict[str, Any]:
-        """Get data for Knowledge Graph visualization"""
-        try:
-            entries = self._load_memory()
+            logger.error(f"Failed to load MCP config: {str(e)}")
+            raise
             
-            # Transform entries into visualization format
-            nodes = []
-            edges = []
+    async def _ensure_session(self):
+        """Ensure aiohttp session is initialized"""
+        if self.session is None or self.session.closed:
+            self.session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=self.config['clientOptions']['timeout'])
+            )
             
-            for entry in entries:
-                nodes.append({
-                    'id': entry.get('id'),
-                    'label': entry.get('title'),
-                    'type': entry.get('type', 'memory')
-                })
+    async def _request(self, method: str, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Make HTTP request with retry logic"""
+        await self._ensure_session()
+        
+        for attempt in range(self.retry_attempts):
+            try:
+                async with self.session.request(
+                    method, 
+                    f"{self.base_url}{endpoint}",
+                    json=data if data else None
+                ) as response:
+                    if response.status == 200:
+                        return await response.json()
+                    else:
+                        text = await response.text()
+                        raise Exception(f"Request failed with status {response.status}: {text}")
+                        
+            except Exception as e:
+                if attempt == self.retry_attempts - 1:
+                    raise
+                await asyncio.sleep(self.retry_delay * (2 ** attempt))
                 
-                # Add edges based on relationships
-                for rel in entry.get('relationships', []):
-                    edges.append({
-                        'from': entry.get('id'),
-                        'to': rel.get('target_id'),
-                        'label': rel.get('type')
-                    })
-            
-            return {
-                'nodes': nodes,
-                'edges': edges,
-                'timestamp': datetime.now().isoformat()
-            }
-            
-        except Exception as e:
-            return {
-                'error': str(e),
-                'timestamp': datetime.now().isoformat()
-            }
-    
-    def _ensure_memory_file(self) -> None:
-        """Ensure memory file exists"""
-        try:
-            os.makedirs(os.path.dirname(self.memory_file), exist_ok=True)
-            if not os.path.exists(self.memory_file):
-                with open(self.memory_file, 'w') as f:
-                    f.write('')
-            self.connected = True
-            self.last_sync = datetime.now()
-        except Exception as e:
-            self.connected = False
-            raise Exception(f"Failed to initialize memory file: {str(e)}")
-    
-    def _load_memory(self) -> List[Dict[str, Any]]:
-        """Load memory entries from file"""
-        entries = []
-        try:
-            with open(self.memory_file, 'r') as f:
-                for line in f:
-                    if line.strip():
-                        entries.append(json.loads(line))
-            return entries
-        except Exception as e:
-            raise Exception(f"Failed to load memory entries: {str(e)}")
-    
-    def _filter_relevant_entries(self, entries: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]]:
-        """Filter entries relevant to the query"""
-        # TODO: Implement actual relevance filtering logic
-        return entries[:5]  # Return first 5 entries for now 
+    async def create_entities(self, entities: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Create new entities in the Knowledge Graph"""
+        return await self._request('POST', '/entities/create', {'entities': entities})
+        
+    async def create_relations(self, relations: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Create new relations in the Knowledge Graph"""
+        return await self._request('POST', '/relations/create', {'relations': relations})
+        
+    async def add_observations(self, observations: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Add observations to existing entities"""
+        return await self._request('POST', '/entities/observations/add', {'observations': observations})
+        
+    async def search_nodes(self, query: str) -> Dict[str, Any]:
+        """Search for nodes in the Knowledge Graph"""
+        return await self._request('POST', '/search', {'query': query})
+        
+    async def get_relevant_context(self, query: str) -> Dict[str, Any]:
+        """Get relevant context for a query"""
+        return await self._request('POST', '/context/relevant', {'query': query})
+        
+    async def add_interaction(self, interaction: Dict[str, Any]) -> Dict[str, Any]:
+        """Add an interaction to the Knowledge Graph"""
+        return await self._request('POST', '/interactions/add', {'interaction': interaction})
+        
+    async def add_feedback(self, feedback: Dict[str, Any]) -> Dict[str, Any]:
+        """Add feedback to the Knowledge Graph"""
+        return await self._request('POST', '/feedback/add', {'feedback': feedback})
+        
+    async def get_health(self) -> Dict[str, Any]:
+        """Get Knowledge Graph health status"""
+        return await self._request('GET', '/health')
+        
+    async def get_context(self) -> Dict[str, Any]:
+        """Get current Knowledge Graph context"""
+        return await self._request('GET', '/context')
+        
+    async def update_context(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Update Knowledge Graph context"""
+        return await self._request('POST', '/context/update', {'context': context})
+        
+    async def get_visualization_data(self) -> Dict[str, Any]:
+        """Get data for Knowledge Graph visualization"""
+        return await self._request('GET', '/visualize')
+        
+    async def close(self):
+        """Close the client session"""
+        if self.session and not self.session.closed:
+            await self.session.close() 
